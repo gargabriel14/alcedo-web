@@ -5,7 +5,7 @@ al terminarla, qué cambió y qué falta.
 
 ---
 
-## FASE 1 — Cimientos · _en curso_
+## FASE 1 — Cimientos · _completada, a falta del despliegue_
 
 ### Objetivo
 
@@ -41,6 +41,40 @@ Marcado en el código con `TODO(contenido)`. Los datos fiscales van con marcador
 Pipeline de MDX, ficha de libro, catálogo, Supabase, Resend, pasarela de pago, tests.
 El formulario de captura valida en servidor pero **todavía no guarda ni envía nada**:
 lo dice explícitamente en pantalla para no engañar a nadie.
+
+### Qué cambió (cierre de fase)
+
+- Proyecto **Next.js 16.2.11 + React 19 + Tailwind 4** con TypeScript en modo
+  estricto ampliado (`noUncheckedIndexedAccess`, `noUnusedLocals`…).
+- Sistema de diseño: paleta hueso/tinta/martín pescador, tres colores de sello,
+  tokens semánticos con modo oscuro completo, Fraunces + Inter autoalojadas.
+- Layout: cabecera pegajosa con navegación, menú móvil accesible (Radix Dialog),
+  conmutador de tema sin destello, pie con sellos, editorial y legales.
+- Componentes base: `Boton`/`EnlaceBoton`, `BadgeSello`, `Contenedor`,
+  `TituloSeccion`, `Logo`, `PortadaLibro` (tipográfica mientras no haya imagen),
+  `TarjetaLibro`, `CapturaEmail`.
+- Home con los cinco bloques: hero (claim + libro destacado + captura), tres
+  sellos, últimas publicaciones, testimonios y Compromiso Alcedo.
+- SEO base: metadatos con plantilla de título, Open Graph, JSON-LD de
+  `Organization` y `WebSite` con `SearchAction`, `sitemap.xml` y `robots.txt`.
+- Páginas puente con `noindex` para las 11 rutas del mapa aún no construidas,
+  más el 404 propio.
+- 25 rutas generadas **como HTML estático**. `pnpm verificar` en verde.
+
+### Verificado
+
+- Modo oscuro y conmutador manual: la elección se guarda y, si coincide con la
+  del sistema, se borra para volver a seguirlo.
+- **Cero peticiones a hosts externos** en la home (fuentes autoalojadas).
+- Contrastes de la paleta calculados a mano: texto 16,9:1 · texto tenue 7,2:1 ·
+  enlaces de marca 5,8:1 sobre fondo hueso. Todos por encima de AA.
+
+### Qué falta para cerrar la fase
+
+1. **Despliegue en Vercel**: lo tiene que hacer el fundador (repo en GitHub +
+   importar en Vercel). No manejo credenciales.
+2. Auditoría Lighthouse real sobre la URL desplegada. En local no mide igual.
+3. Sustituir el contenido de ejemplo y los datos fiscales.
 
 ---
 
