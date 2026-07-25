@@ -1,0 +1,5 @@
+allowBuilds:
+  # sharp: optimización de imágenes de next/image en build (AVIF/WebP).
+  sharp: true
+  # unrs-resolver: resolución de módulos de eslint-import-resolver.
+  unrs-resolver: true
