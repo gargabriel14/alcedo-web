@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Favicon: el isotipo simplificado para que se lea a 16 px. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <rect width="48" height="48" rx="9" fill="#0E7C9B" />
+  <path
+    d="M24 8c5.6 3.4 8.8 8.9 8.8 15.1C32.8 30.5 29.3 37 24 41c-5.3-4-8.8-10.5-8.8-17.9C15.2 16.9 18.4 11.4 24 8Z"
+    fill="#FAF8F3"
+  />
+  <path
+    d="M24 41c-3-2.3-5.4-5.4-6.8-9 2 1.5 4.3 2.3 6.8 2.3s4.8-.8 6.8-2.3c-1.4 3.6-3.8 6.7-6.8 9Z"
+    fill="#C4642A"
+  />
+</svg>

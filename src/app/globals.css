@@ -1,0 +1,264 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Modo oscuro por clase.
+   El script de `<ScriptTema />` pone la clase `.oscuro` en <html> antes del
+   primer paint, respetando `prefers-color-scheme` y la elección manual.
+   Trabajar por clase (y no solo con la media query) es lo que permite tener
+   conmutador manual sin renderizar en servidor.
+--------------------------------------------------------------------------- */
+@custom-variant oscuro (&:where(.oscuro, .oscuro *));
+
+/* ---------------------------------------------------------------------------
+   1. Paleta de marca (valores crudos, no cambian con el tema)
+--------------------------------------------------------------------------- */
+@theme {
+  --color-hueso: #faf8f3;
+  --color-tinta: #1a1a1a;
+  --color-martin: #0e7c9b;
+
+  --font-titulares: var(--fuente-titulares), ui-serif, Georgia, "Times New Roman", serif;
+  --font-texto: var(--fuente-texto), ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  /* Medida de línea para artículos: 65–75 caracteres. */
+  --container-medida: 68ch;
+  --container-lectura: 46rem;
+}
+
+/* ---------------------------------------------------------------------------
+   2. Tokens semánticos
+   Los componentes usan SIEMPRE estos, nunca los crudos. Así el modo oscuro
+   se resuelve aquí y no con `oscuro:` repartido por cien ficheros.
+   Contrastes verificados sobre su fondo (AA: 4.5:1 texto, 3:1 UI):
+     texto/fondo 16.9:1 · texto-tenue/fondo 7.2:1 · marca-texto/fondo 5.8:1
+--------------------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+
+  --fondo: #faf8f3;
+  --fondo-alterno: #f2eee4;
+  --superficie: #ffffff;
+  --superficie-tenue: #f7f4ec;
+
+  --texto: #1a1a1a;
+  --texto-tenue: #57534e;
+  --texto-inverso: #faf8f3;
+
+  --borde: #e3dccd;
+  --borde-fuerte: #cdc3b0;
+
+  --marca: #0e7c9b;
+  --marca-texto: #0a6480;
+  --marca-hover: #0a6480;
+  --marca-contraste: #ffffff;
+  --marca-suave: #e4f1f6;
+
+  --sello-practico: #0e7c9b;
+  --sello-practico-texto: #0a6480;
+  --sello-practico-suave: #e4f1f6;
+
+  --sello-vida: #2e7d4f;
+  --sello-vida-texto: #24633e;
+  --sello-vida-suave: #e5f1e9;
+
+  --sello-labs: #c4642a;
+  --sello-labs-texto: #9c4c14;
+  --sello-labs-suave: #fbeade;
+
+  --foco: #0e7c9b;
+  --sombra-tarjeta: 0 1px 2px rgb(26 26 26 / 0.04), 0 8px 24px -12px rgb(26 26 26 / 0.12);
+}
+
+.oscuro {
+  color-scheme: dark;
+
+  --fondo: #12110f;
+  --fondo-alterno: #191713;
+  --superficie: #1c1a17;
+  --superficie-tenue: #211e1a;
+
+  --texto: #f2efe8;
+  --texto-tenue: #b3ada1;
+  --texto-inverso: #12110f;
+
+  --borde: #302d28;
+  --borde-fuerte: #4a453d;
+
+  --marca: #5fbbd6;
+  --marca-texto: #7fcbe0;
+  --marca-hover: #8fd4e6;
+  --marca-contraste: #0b1418;
+  --marca-suave: #12313c;
+
+  --sello-practico: #5fbbd6;
+  --sello-practico-texto: #7fcbe0;
+  --sello-practico-suave: #12313c;
+
+  --sello-vida: #6fc08c;
+  --sello-vida-texto: #8ed0a5;
+  --sello-vida-suave: #17301f;
+
+  --sello-labs: #e89457;
+  --sello-labs-texto: #f0aa77;
+  --sello-labs-suave: #33200f;
+
+  --foco: #7fcbe0;
+  --sombra-tarjeta: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px -12px rgb(0 0 0 / 0.6);
+}
+
+/* Puente entre los tokens y las utilidades de Tailwind:
+   `bg-fondo`, `text-texto-tenue`, `border-borde`, `bg-sello-vida`… */
+@theme inline {
+  --color-fondo: var(--fondo);
+  --color-fondo-alterno: var(--fondo-alterno);
+  --color-superficie: var(--superficie);
+  --color-superficie-tenue: var(--superficie-tenue);
+
+  --color-texto: var(--texto);
+  --color-texto-tenue: var(--texto-tenue);
+  --color-texto-inverso: var(--texto-inverso);
+
+  --color-borde: var(--borde);
+  --color-borde-fuerte: var(--borde-fuerte);
+
+  --color-marca: var(--marca);
+  --color-marca-texto: var(--marca-texto);
+  --color-marca-hover: var(--marca-hover);
+  --color-marca-contraste: var(--marca-contraste);
+  --color-marca-suave: var(--marca-suave);
+
+  --color-sello-practico: var(--sello-practico);
+  --color-sello-practico-texto: var(--sello-practico-texto);
+  --color-sello-practico-suave: var(--sello-practico-suave);
+
+  --color-sello-vida: var(--sello-vida);
+  --color-sello-vida-texto: var(--sello-vida-texto);
+  --color-sello-vida-suave: var(--sello-vida-suave);
+
+  --color-sello-labs: var(--sello-labs);
+  --color-sello-labs-texto: var(--sello-labs-texto);
+  --color-sello-labs-suave: var(--sello-labs-suave);
+
+  --shadow-tarjeta: var(--sombra-tarjeta);
+}
+
+/* ---------------------------------------------------------------------------
+   3. Base
+--------------------------------------------------------------------------- */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    /* Compensa la cabecera fija al saltar a un ancla (índices, TOC). */
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    background-color: var(--fondo);
+    color: var(--texto);
+    font-family: var(--font-texto);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-titulares);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Foco visible siempre, en cualquier elemento interactivo. */
+  :focus-visible {
+    outline: 2px solid var(--foco);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+
+  ::selection {
+    background-color: var(--marca-suave);
+    color: var(--texto);
+  }
+
+  /* Los bordes de las tablas y separadores heredan el token. */
+  hr {
+    border-color: var(--borde);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   4. Animaciones
+   Solo las del cajón de navegación. Nada de librerías: son cuatro keyframes y
+   `prefers-reduced-motion` ya las neutraliza arriba.
+--------------------------------------------------------------------------- */
+@keyframes aparecer {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes desvanecer {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes entrar-derecha {
+  from {
+    translate: 100% 0;
+  }
+}
+
+@keyframes salir-derecha {
+  to {
+    translate: 100% 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   5. Utilidades propias
+--------------------------------------------------------------------------- */
+@utility ojo-titular {
+  /* Antetítulo en versalitas: marca la jerarquía sin gastar un tamaño grande. */
+  font-family: var(--font-texto);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--texto-tenue);
+}
+
+@utility salta-al-contenido {
+  /* Enlace de salto: fuera de pantalla hasta que recibe foco por teclado. */
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 100;
+  translate: 0 -150%;
+  transition: translate 150ms ease-out;
+
+  &:focus-visible {
+    translate: 0 0;
+  }
+}

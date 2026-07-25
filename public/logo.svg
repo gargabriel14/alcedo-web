@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  PLACEHOLDER — isotipo provisional de Editorial Alcedo.
+  Sustituir por el logo definitivo manteniendo el nombre del fichero
+  (`public/logo.svg`) y un lienzo cuadrado: el componente <Logo /> lo consume
+  a 40x40 y no hay que tocar código para cambiarlo.
+  Usa colores de marca fijos a propósito, para que funcione igual sobre el
+  fondo hueso y sobre el fondo oscuro.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <path
+    d="M24 2c7.7 4.6 12 12.2 12 20.6C36 32.7 31.2 41.4 24 46c-7.2-4.6-12-13.3-12-23.4C12 14.2 16.3 6.6 24 2Z"
+    fill="#0E7C9B"
+  />
+  <path
+    d="M24 46c-4.2-2.7-7.4-7-9.3-12 2.8 2.1 5.9 3.2 9.3 3.2 3.4 0 6.5-1.1 9.3-3.2-1.9 5-5.1 9.3-9.3 12Z"
+    fill="#C4642A"
+  />
+  <path d="M24 3.5v41" stroke="#FAF8F3" stroke-width="2" stroke-linecap="round" />
+</svg>
