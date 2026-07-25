@@ -85,8 +85,3 @@ export function temasDisponibles(): string[] {
   }
   return [...temas].sort((a, b) => a.localeCompare(b, "es"));
 }
-
-/** Texto del estado, para badges. */
-export function etiquetaEstado(libro: Libro): string | null {
-  return libro.estado === "en-preparacion" ? "En preparación" : null;
-}

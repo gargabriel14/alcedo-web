@@ -1,10 +1,10 @@
 import Image from "next/image";
-import type { Libro } from "@/lib/contenido/libros";
+import type { LibroTarjeta } from "@/lib/contenido/tarjeta";
 import { obtenerSello } from "@/lib/sellos";
 import { cn } from "@/lib/utils";
 
 interface PropsPortadaLibro {
-  libro: Libro;
+  libro: LibroTarjeta;
   /** `sizes` real de la caja donde se renderiza. Obligatorio para no servir de más. */
   sizes: string;
   /** Solo en la portada que es el LCP de la página. Nunca en más de una. */

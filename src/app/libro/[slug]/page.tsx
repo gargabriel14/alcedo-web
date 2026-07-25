@@ -16,12 +16,8 @@ import { BadgeSello } from "@/components/ui/BadgeSello";
 import { EnlaceBoton } from "@/components/ui/Boton";
 import { Contenedor } from "@/components/ui/Contenedor";
 import { obtenerAutor } from "@/lib/contenido/autores";
-import {
-  etiquetaEstado,
-  librosRelacionados,
-  obtenerLibro,
-  todosLosLibros,
-} from "@/lib/contenido/libros";
+import { librosRelacionados, obtenerLibro, todosLosLibros } from "@/lib/contenido/libros";
+import { aTarjeta, etiquetaEstado } from "@/lib/contenido/tarjeta";
 import { obtenerSello } from "@/lib/sellos";
 import {
   faqJsonLd,
@@ -104,7 +100,7 @@ export default async function PaginaLibro({
           <div className="grid gap-8 sm:grid-cols-[minmax(0,15rem)_1fr] sm:gap-10 lg:grid-cols-[minmax(0,20rem)_1fr] lg:gap-14">
             <div className="mx-auto w-[62%] max-w-56 sm:mx-0 sm:w-full sm:max-w-none">
               <PortadaLibro
-                libro={libro}
+                libro={aTarjeta(libro)}
                 prioridad
                 sizes="(min-width: 1024px) 20rem, (min-width: 640px) 15rem, 62vw"
               />
@@ -252,7 +248,7 @@ export default async function PaginaLibro({
             <ul className="mt-8 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
               {relacionados.map((otro) => (
                 <li key={otro.slug} className="flex">
-                  <TarjetaLibro libro={otro} />
+                  <TarjetaLibro libro={aTarjeta(otro)} />
                 </li>
               ))}
             </ul>

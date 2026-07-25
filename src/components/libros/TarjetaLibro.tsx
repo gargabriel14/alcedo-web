@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { PortadaLibro } from "@/components/libros/PortadaLibro";
 import { BadgeSello } from "@/components/ui/BadgeSello";
-import { etiquetaEstado, type Libro } from "@/lib/contenido/libros";
+import { etiquetaEstado, type LibroTarjeta } from "@/lib/contenido/tarjeta";
 import { formatearPrecio } from "@/lib/utils";
 
 interface PropsTarjetaLibro {
-  libro: Libro;
+  libro: LibroTarjeta;
   /** Solo `true` en la primera tarjeta de una página sin hero. */
   prioridad?: boolean;
   /** Oculta el badge del sello cuando ya estás dentro de ese sello. */
@@ -18,8 +18,15 @@ interface PropsTarjetaLibro {
  * Toda la tarjeta es clicable (un `span` absoluto sobre el enlace del título),
  * pero el texto del enlace es el título: es lo que anuncia el lector de pantalla
  * y lo que Google usa como ancla.
+ *
+ * Recibe `LibroTarjeta` y no `Libro` para poder renderizarse también dentro del
+ * catálogo, que filtra en el navegador.
  */
-export function TarjetaLibro({ libro, prioridad = false, sinSello = false }: PropsTarjetaLibro) {
+export function TarjetaLibro({
+  libro,
+  prioridad = false,
+  sinSello = false,
+}: PropsTarjetaLibro) {
   const estado = etiquetaEstado(libro);
 
   return (
@@ -55,10 +62,10 @@ export function TarjetaLibro({ libro, prioridad = false, sinSello = false }: Pro
 
         <p className="mt-3 flex flex-wrap items-baseline gap-x-2 gap-y-1 text-sm">
           <span className="font-semibold text-texto">
-            PDF Premium {formatearPrecio(libro.precios.pdf)}
+            PDF Premium {formatearPrecio(libro.precioPdf)}
           </span>
           <span className="text-texto-tenue">
-            · Kindle {formatearPrecio(libro.precios.kindle)}
+            · Kindle {formatearPrecio(libro.precioKindle)}
           </span>
         </p>
       </div>

@@ -89,7 +89,7 @@ export function CapturaEmail({
       </p>
       <p className="mt-2 text-sm leading-relaxed text-texto-tenue">{recurso.gancho}</p>
 
-      <ul className="mt-3.5 flex flex-wrap gap-1.5">
+      <ul className="mt-3.5 flex list-none flex-wrap gap-1.5 pl-0">
         {recurso.formatos.map((formato) => (
           <li
             key={formato}

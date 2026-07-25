@@ -2,9 +2,10 @@ import { TarjetaLibro } from "@/components/libros/TarjetaLibro";
 import { Contenedor } from "@/components/ui/Contenedor";
 import { TituloSeccion } from "@/components/ui/TituloSeccion";
 import { todosLosLibros } from "@/lib/contenido/libros";
+import { aTarjeta } from "@/lib/contenido/tarjeta";
 
 export function UltimasPublicaciones() {
-  const libros = todosLosLibros().slice(0, 3);
+  const libros = todosLosLibros().slice(0, 3).map(aTarjeta);
 
   return (
     <section

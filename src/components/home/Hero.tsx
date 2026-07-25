@@ -5,6 +5,7 @@ import { BadgeSello } from "@/components/ui/BadgeSello";
 import { EnlaceBoton } from "@/components/ui/Boton";
 import { Contenedor } from "@/components/ui/Contenedor";
 import { libroDestacado } from "@/lib/contenido/libros";
+import { aTarjeta } from "@/lib/contenido/tarjeta";
 import { RECURSO_PORTADA } from "@/lib/datos/recursos";
 import { SITIO } from "@/lib/sitio";
 import { formatearPrecio } from "@/lib/utils";
@@ -44,7 +45,7 @@ export function Hero() {
               aria-hidden="true"
             >
               <PortadaLibro
-                libro={libro}
+                libro={aTarjeta(libro)}
                 decorativa
                 prioridad
                 sizes="(min-width: 1024px) 18rem, 38vw"

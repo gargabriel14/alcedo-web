@@ -244,11 +244,14 @@
    No usamos @tailwindcss/typography para no cargar con sus 30 kB de CSS ni con
    su escala tipográfica, que no es la nuestra.
 --------------------------------------------------------------------------- */
-.prosa {
-  font-size: 1.0625rem;
-  line-height: 1.75;
-  color: var(--texto);
-}
+/* Va en `base` para que cualquier utilidad de Tailwind aplicada a un componente
+   insertado dentro del MDX (por ejemplo la captura de correo) gane a estas reglas. */
+@layer base {
+  .prosa {
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    color: var(--texto);
+  }
 
 .prosa > * + * {
   margin-top: 1.25em;
@@ -363,6 +366,7 @@
 
 .prosa th {
   font-weight: 600;
+}
 }
 
 /* ---------------------------------------------------------------------------
