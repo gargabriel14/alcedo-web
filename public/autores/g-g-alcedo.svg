@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  PLACEHOLDER — retrato provisional de G. G. Alcedo.
+  Sustituir por una foto cuadrada (JPG o WebP, mínimo 800 px) y actualizar
+  `foto.src` en `src/lib/datos/autores.ts`. Es un monograma a propósito: no
+  ponemos una foto de banco de imágenes haciéndola pasar por el autor.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img">
+  <rect width="400" height="400" fill="#F2EEE4" />
+  <circle cx="200" cy="200" r="132" fill="#0E7C9B" />
+  <text
+    x="200"
+    y="200"
+    fill="#FAF8F3"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="96"
+    font-weight="600"
+    letter-spacing="4"
+    text-anchor="middle"
+    dominant-baseline="central"
+  >GGA</text>
+  <circle cx="284" cy="116" r="15" fill="#C4642A" />
+</svg>

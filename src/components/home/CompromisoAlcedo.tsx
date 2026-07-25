@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Contenedor } from "@/components/ui/Contenedor";
 import { TituloSeccion } from "@/components/ui/TituloSeccion";
+import { DIAS_GARANTIA, MESES_ACTUALIZACION } from "@/lib/garantia";
 
 /**
  * El Compromiso Alcedo.
@@ -8,9 +9,9 @@ import { TituloSeccion } from "@/components/ui/TituloSeccion";
  * No es relleno de marca: son las cuatro objeciones que frenan una compra de
  * 29 € a un desconocido en internet, contestadas antes de que las formule.
  *
- * TODO(contenido): la garantía de 14 días y la actualización de 12 meses son
- * promesas contractuales. Confirmar la redacción antes de abrir la tienda; el
- * código de la Fase 3 las cumple (versionado de ficheros y aviso por correo).
+ * Las dos últimas son promesas contractuales, así que los plazos se leen de
+ * `src/lib/garantia.ts`, que es el mismo módulo que decide si una devolución o
+ * una actualización siguen vigentes. El texto y el sistema no pueden divergir.
  */
 const COMPROMISOS = [
   {
@@ -24,14 +25,14 @@ const COMPROMISOS = [
       "Cada guía viene con ficheros listos para usar, probados con datos reales y con la normativa española en la mano, no con ejemplos de manual.",
   },
   {
-    titulo: "Actualización gratuita 12 meses",
+    titulo: `Actualización gratuita ${MESES_ACTUALIZACION} meses`,
     texto:
-      "Si cambia la ley, el programa o el precio de algo que sale en el libro, actualizamos el PDF y te lo enviamos. Sin pagar otra vez.",
+      "Si cambia la ley, el programa o el precio de algo que sale en el libro, actualizamos el fichero y te avisamos. Guardamos la versión de tu compra: mientras estés en plazo, descargas siempre la última sin pagar otra vez.",
   },
   {
-    titulo: "14 días de garantía",
+    titulo: `${DIAS_GARANTIA} días de garantía`,
     texto:
-      "Si no te sirve, escribes y te devolvemos el dinero. Sin preguntas y sin formularios raros, aunque ya lo hayas descargado.",
+      "Si no te sirve, escribes y te devolvemos el dinero, aunque ya lo hayas descargado. La cuenta atrás la lleva el sistema, no nuestra palabra: en tu área de cliente verás los días exactos que te quedan en cada compra.",
   },
 ] as const;
 
