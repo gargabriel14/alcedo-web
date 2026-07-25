@@ -78,7 +78,7 @@ lo dice explícitamente en pantalla para no engañar a nadie.
 
 ---
 
-## FASE 2 — Contenido · _en curso_
+## FASE 2 — Contenido · _completada_
 
 ### Objetivo
 
@@ -102,6 +102,44 @@ fichas completas, landings de sello, autores y blog, todo indexable.
 
 `/content/productos` y `/content/recursos` (son tienda: Fase 3), Supabase, Resend,
 pasarela, área de cliente y las páginas legales definitivas.
+
+### Qué cambió (cierre de fase)
+
+- **Pipeline de contenido**: `/content/{libros,autores,blog}` en MDX, leído en build,
+  validado con Zod. El build se para con el fichero y el campo exactos si algo falta,
+  y también si un libro apunta a un autor que no existe.
+- **Ficha de libro** con los diez bloques: portada y datos, selector de tres formatos
+  comparados con el PDF Premium destacado y su razón explícita, resultados en verbo,
+  descripción larga en MDX, índice desplegable con `<details>` nativo, muestra
+  gratuita (con visor, o el hueco explicado si aún no hay imágenes), entregables uno a
+  uno con su icono, reseñas, FAQ, barra de compra pegajosa en móvil y venta cruzada.
+- **Catálogo** con filtro por sello, tema y formato resuelto en el navegador sobre
+  HTML estático: todos los libros siguen siendo indexables.
+- **Landings de sello** con su color, sus libros y sus artículos.
+- **Blog** con índice lateral generado de los titulares, tiempo de lectura,
+  `<Captura />` insertable a mitad del texto y cierre siempre hacia el libro.
+- **Autores**: listado y ficha con biografía larga en MDX.
+- **SEO**: `generateMetadata` en todas las rutas dinámicas, imágenes OG generadas en
+  build con `next/og`, JSON-LD de `Book`, `Product` con oferta, `FAQPage`, `Article`,
+  `Person` y `BreadcrumbList`, y sitemap construido del contenido real.
+- **Herramientas para el fundador**: `CONTENIDO.md` con la guía de estilo de cada tipo
+  de ficha y `pnpm nuevo-libro "Título"` para crear un libro con todos los campos.
+- **`/comprar/[sku]`**: la URL definitiva de compra ya existe y explica que la pasarela
+  llega en la Fase 3, así que ningún botón del sitio tendrá que cambiar.
+
+### Verificado
+
+- 40 rutas generadas como HTML estático, imágenes OG incluidas.
+- `pnpm verificar` (tipos + lint + build) en verde.
+- Ficha de libro y artículo comprobados en el navegador: el MDX renderiza, el índice
+  enlaza a anclas que existen y la captura de correo cae donde debe.
+
+### Qué falta
+
+1. Portadas reales y páginas de muestra: hoy se dibujan portadas tipográficas.
+2. Enlaces de Amazon: los botones están apagados hasta que existan las URL.
+3. Reseñas reales. Sin ellas no hay `aggregateRating`, y así seguirá.
+4. `/sobre-alcedo`, `/contacto` y `/recursos` siguen siendo páginas puente.
 
 ## FASE 2 bis — nota de la Fase 1
 

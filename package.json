@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "verificar": "pnpm typecheck && pnpm lint && pnpm build"
+    "verificar": "pnpm typecheck && pnpm lint && pnpm build",
+    "nuevo-libro": "node scripts/nuevo-libro.mts"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.21",

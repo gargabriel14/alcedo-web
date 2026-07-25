@@ -6,8 +6,9 @@ práctica ilustrada. Claim: _Conocimiento con puntería_.
 El sitio tiene un objetivo medible: **vender el PDF Premium y capturar correos**.
 Amazon es el canal de captación; aquí está el margen.
 
-> **Estado: Fase 1 completada.** Cimientos, sistema de diseño y home. La tienda,
-> el catálogo en MDX y la captura real de correos llegan en las fases 2 y 3.
+> **Estado: fases 1 y 2 completadas.** Sistema de diseño, home, catálogo en MDX,
+> ficha de libro completa, sellos, autores y blog. Falta la tienda: pasarela de
+> pago, captura real de correos y área de cliente (Fase 3).
 > El plan por fases está en [PLAN.md](PLAN.md).
 
 ---
@@ -52,41 +53,87 @@ ninguna clave: el sitio funciona entero sin servicios externos.
 ## Estructura del repositorio
 
 ```
+content/                   EL CONTENIDO EDITORIAL. Aquí se escribe, sin tocar código.
+├─ libros/                 Una ficha por libro   → /libro/<fichero>
+├─ autores/                Una ficha por autor   → /autor/<fichero>
+└─ blog/                   Un artículo por fichero → /blog/<fichero>
+
+scripts/
+└─ nuevo-libro.mts         Crea la ficha de un libro nuevo con todos los campos
+
 src/
 ├─ app/                    Rutas (App Router). Una carpeta = una URL.
 │  ├─ layout.tsx           Cabecera, pie, fuentes, metadatos y JSON-LD del sitio
 │  ├─ page.tsx             Home
+│  ├─ libro/[slug]/        Ficha de libro + su imagen para redes
+│  ├─ catalogo/            Catálogo con filtros
+│  ├─ sellos/[sello]/      Landing de cada sello
+│  ├─ blog/                Listado y artículos
+│  ├─ autor/[slug]/        Ficha de autor
+│  ├─ comprar/[sku]/       Inicio de compra (se conecta a la pasarela en la Fase 3)
 │  ├─ robots.ts            robots.txt generado
-│  ├─ sitemap.ts           sitemap.xml generado
-│  └─ …                    Secciones (catálogo, blog, legal…)
+│  └─ sitemap.ts           sitemap.xml generado a partir del contenido
 ├─ components/
+│  ├─ catalogo/            Filtros del catálogo
+│  ├─ formularios/         Captura de correo
 │  ├─ home/                Bloques de la portada
 │  ├─ layout/              Cabecera, pie, menú móvil, conmutador de tema
-│  ├─ libros/              Portada y tarjeta de libro
-│  ├─ formularios/         Captura de correo
+│  ├─ libros/              Portada, tarjeta, selector de formato, índice, FAQ…
 │  ├─ marca/               Logo
+│  ├─ mdx/                 Renderizado del contenido MDX
 │  ├─ seo/                 Inserción de datos estructurados
 │  └─ ui/                  Botón, badge de sello, contenedor, título de sección
 └─ lib/
-   ├─ datos/               CONTENIDO de ejemplo de la Fase 1 (libros, recursos…)
+   ├─ contenido/           Lectura y validación del MDX con Zod
    ├─ boletin/             Acción de servidor del alta en la lista
-   ├─ seo/                 Constructores de JSON-LD y registro de rutas
+   ├─ datos/               Lo que aún no es MDX: recursos y testimonios
+   ├─ seo/                 JSON-LD, plantilla de imágenes OG y rutas indexables
+   ├─ garantia.ts          Plazos de garantía y actualizaciones (fuente única)
    ├─ sellos.ts            Los tres sellos y sus colores
    ├─ sitio.ts             Configuración global (dominio, navegación, claim)
    └─ utils.ts             Formato de precios y fechas, unión de clases
 ```
 
-En la **Fase 2** aparece `content/{libros,productos,blog,autores,recursos}` con el
-contenido editorial en MDX validado con Zod, y `src/lib/datos/` desaparece.
+En la **Fase 3** aparecerán `content/productos` y `content/recursos`, que son ya
+cosa de la tienda.
 
-### Dónde se cambia el contenido, hoy
+---
 
-| Qué | Fichero |
+## Cómo añadir un libro nuevo
+
+Pensado para hacerlo sin saber programar. La guía completa de cada campo está en
+[CONTENIDO.md](CONTENIDO.md).
+
+**1. Crea la ficha con el script.** Te deja todos los campos preparados:
+
+```bash
+pnpm nuevo-libro "Excel para fotógrafos" --sello=practico
+```
+
+**2. Abre el fichero** que te indica (`content/libros/excel-para-fotografos.mdx`) y
+sustituye todos los `TODO` por tus textos. El nombre del fichero es la URL, así que
+piénsalo antes: cambiarlo después rompe los enlaces.
+
+**3. Míralo en local:**
+
+```bash
+pnpm dev
+```
+
+**4. Sube los cambios a GitHub.** Vercel despliega solo y en un minuto está en línea.
+
+Si te dejas un campo obligatorio, el despliegue **se para** y te dice el fichero y el
+campo exactos. Es aposta: mejor eso que publicar un libro sin precio.
+
+### Dónde se cambia lo demás
+
+| Qué | Dónde |
 | --- | --- |
-| Libros del catálogo y precios | `src/lib/datos/libros.ts` |
+| Libros, autores y artículos | `content/` (ver [CONTENIDO.md](CONTENIDO.md)) |
 | Lead magnets (descargas gratis) | `src/lib/datos/recursos.ts` |
 | Reseñas de lectores | `src/lib/datos/testimonios.ts` |
 | Compromiso Alcedo | `src/components/home/CompromisoAlcedo.tsx` |
+| Plazos de garantía y actualizaciones | `src/lib/garantia.ts` |
 | Claim, propuesta y navegación | `src/lib/sitio.ts` |
 | Textos de los sellos | `src/lib/sellos.ts` |
 
