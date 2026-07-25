@@ -18,6 +18,8 @@ export interface Testimonio {
   contexto: string;
   /** De dónde sale: «Amazon», «Lector beta», «Email»… */
   procedencia: string;
+  /** Slug del libro reseñado. Sin él, la reseña es de la editorial en general. */
+  libro?: string;
   /** `true` = hueco de maqueta, no se cuenta como reseña ni sale en JSON-LD. */
   pendiente?: boolean;
 }

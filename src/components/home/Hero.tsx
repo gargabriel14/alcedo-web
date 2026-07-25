@@ -4,7 +4,7 @@ import { PortadaLibro } from "@/components/libros/PortadaLibro";
 import { BadgeSello } from "@/components/ui/BadgeSello";
 import { EnlaceBoton } from "@/components/ui/Boton";
 import { Contenedor } from "@/components/ui/Contenedor";
-import { LIBRO_DESTACADO } from "@/lib/datos/libros";
+import { libroDestacado } from "@/lib/contenido/libros";
 import { RECURSO_PORTADA } from "@/lib/datos/recursos";
 import { SITIO } from "@/lib/sitio";
 import { formatearPrecio } from "@/lib/utils";
@@ -18,7 +18,7 @@ import { formatearPrecio } from "@/lib/utils";
  * compra. En escritorio el libro pasa a la columna derecha y el formulario sube.
  */
 export function Hero() {
-  const libro = LIBRO_DESTACADO;
+  const libro = libroDestacado();
 
   return (
     <section className="border-b border-borde bg-fondo-alterno">
@@ -39,7 +39,7 @@ export function Hero() {
           <div className="flex gap-5 rounded-lg border border-borde bg-superficie p-4 shadow-tarjeta sm:gap-7 sm:p-6 lg:flex-col lg:items-start lg:gap-6">
             <Link
               href={`/libro/${libro.slug}`}
-              className="w-[38%] shrink-0 max-w-44 lg:w-full lg:max-w-72 lg:self-center"
+              className="w-[38%] max-w-44 shrink-0 lg:w-full lg:max-w-72 lg:self-center"
               tabIndex={-1}
               aria-hidden="true"
             >
@@ -55,7 +55,7 @@ export function Hero() {
               <div className="flex flex-wrap items-center gap-2">
                 <BadgeSello sello={libro.sello} conEnlace />
                 <span className="text-xs font-medium text-texto-tenue">
-                  Nuestro libro más vendido
+                  Libro destacado
                 </span>
               </div>
 
@@ -70,10 +70,10 @@ export function Hero() {
 
               <p className="mt-3.5 text-sm leading-relaxed text-texto-tenue">
                 <span className="font-semibold text-texto">
-                  PDF Premium {formatearPrecio(libro.precioPdfEUR)}
+                  PDF Premium {formatearPrecio(libro.precios.pdf)}
                 </span>{" "}
                 — {libro.promesaPdf}. También en Kindle desde{" "}
-                {formatearPrecio(libro.precioKindleEUR)} y en tapa blanda.
+                {formatearPrecio(libro.precios.kindle)}.
               </p>
 
               <EnlaceBoton

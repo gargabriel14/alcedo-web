@@ -237,7 +237,136 @@
 }
 
 /* ---------------------------------------------------------------------------
-   5. Utilidades propias
+   5. Prosa
+   Estilos del contenido que viene de MDX (artículos, bios, descripciones de
+   libro). Se hace con selectores descendentes en vez de mapear cada etiqueta en
+   React: menos código, y el autor escribe Markdown normal sin saber nada de esto.
+   No usamos @tailwindcss/typography para no cargar con sus 30 kB de CSS ni con
+   su escala tipográfica, que no es la nuestra.
+--------------------------------------------------------------------------- */
+.prosa {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: var(--texto);
+}
+
+.prosa > * + * {
+  margin-top: 1.25em;
+}
+
+.prosa h2 {
+  margin-top: 2.25em;
+  font-size: 1.625rem;
+  line-height: 1.25;
+  /* Deja aire bajo la cabecera fija al saltar desde el índice. */
+  scroll-margin-top: 5.5rem;
+}
+
+.prosa h3 {
+  margin-top: 1.75em;
+  font-size: 1.25rem;
+  line-height: 1.35;
+  scroll-margin-top: 5.5rem;
+}
+
+.prosa h2 + *,
+.prosa h3 + * {
+  margin-top: 0.75em;
+}
+
+.prosa a {
+  color: var(--marca-texto);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.prosa a:hover {
+  text-decoration-thickness: 2px;
+}
+
+.prosa strong {
+  font-weight: 600;
+}
+
+.prosa ul,
+.prosa ol {
+  padding-left: 1.5rem;
+}
+
+.prosa ul {
+  list-style: disc;
+}
+
+.prosa ol {
+  list-style: decimal;
+}
+
+.prosa li + li {
+  margin-top: 0.5em;
+}
+
+.prosa li::marker {
+  color: var(--texto-tenue);
+}
+
+.prosa blockquote {
+  border-left: 3px solid var(--marca);
+  padding: 0.25rem 0 0.25rem 1.25rem;
+  color: var(--texto-tenue);
+}
+
+.prosa code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  background-color: var(--superficie-tenue);
+  border: 1px solid var(--borde);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+}
+
+.prosa pre {
+  background-color: var(--superficie-tenue);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  padding: 1rem 1.1rem;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.prosa pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+  font-size: inherit;
+}
+
+.prosa hr {
+  margin-top: 2.5em;
+  margin-bottom: 2.5em;
+}
+
+.prosa table {
+  width: 100%;
+  font-size: 0.9375rem;
+  border-collapse: collapse;
+}
+
+.prosa th,
+.prosa td {
+  border-bottom: 1px solid var(--borde);
+  padding: 0.5rem 0.75rem 0.5rem 0;
+  text-align: left;
+  vertical-align: top;
+}
+
+.prosa th {
+  font-weight: 600;
+}
+
+/* ---------------------------------------------------------------------------
+   6. Utilidades propias
 --------------------------------------------------------------------------- */
 @utility ojo-titular {
   /* Antetítulo en versalitas: marca la jerarquía sin gastar un tamaño grande. */

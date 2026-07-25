@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { Libro } from "@/lib/datos/libros";
+import type { Libro } from "@/lib/contenido/libros";
 import { obtenerSello } from "@/lib/sellos";
 import { cn } from "@/lib/utils";
 
@@ -20,11 +20,11 @@ interface PropsPortadaLibro {
 /**
  * Portada del libro.
  *
- * Si `libro.portada.src` tiene una imagen, se sirve por `next/image` en AVIF.
- * Si todavía no la hay, se dibuja una portada tipográfica con los datos reales
- * del libro: cero bytes de imagen, cero CLS, y nadie se confunde pensando que
- * es la portada definitiva. El texto escala con el contenedor (`cqw`), así que
- * la misma portada funciona a 120 px en una tarjeta y a 420 px en el hero.
+ * Si el frontmatter trae `portada`, se sirve por `next/image` en AVIF. Si todavía
+ * no hay imagen, se dibuja una portada tipográfica con los datos reales del
+ * libro: cero bytes de imagen, cero CLS, y nadie se confunde pensando que es la
+ * portada definitiva. El texto escala con el contenedor (`cqw`), así que la misma
+ * portada funciona a 120 px en una tarjeta y a 420 px en el hero.
  */
 export function PortadaLibro({
   libro,
@@ -34,18 +34,20 @@ export function PortadaLibro({
   className,
 }: PropsPortadaLibro) {
   const sello = obtenerSello(libro.sello);
+  const descripcion =
+    libro.portada?.alt ?? `Portada de ${libro.titulo}, de ${libro.autorNombre}`;
 
   const marco = cn(
     "relative aspect-[2/3] w-full overflow-hidden rounded-sm rounded-r-md bg-white shadow-tarjeta ring-1 ring-black/10",
     className,
   );
 
-  if (libro.portada.src) {
+  if (libro.portada) {
     return (
       <div className={marco}>
         <Image
           src={libro.portada.src}
-          alt={decorativa ? "" : libro.portada.alt}
+          alt={decorativa ? "" : descripcion}
           fill
           sizes={sizes}
           priority={prioridad}
@@ -60,7 +62,7 @@ export function PortadaLibro({
     <div
       className={cn(marco, "@container")}
       role={decorativa ? "presentation" : "img"}
-      aria-label={decorativa ? undefined : libro.portada.alt}
+      aria-label={decorativa ? undefined : descripcion}
       aria-hidden={decorativa ? true : undefined}
     >
       <div
@@ -72,7 +74,7 @@ export function PortadaLibro({
       <div className="flex h-full flex-col justify-between pt-[15%] pr-[9%] pb-[9%] pl-[11%]">
         <div>
           <p
-            className="text-[2.6cqw] font-semibold uppercase tracking-[0.16em]"
+            className="text-[2.6cqw] font-semibold tracking-[0.16em] uppercase"
             style={{ color: sello.hex }}
           >
             {sello.nombre}
@@ -88,7 +90,7 @@ export function PortadaLibro({
         <div>
           <span aria-hidden="true" className="block h-px w-[18%] bg-tinta/30" />
           <p className="mt-[4%] text-[3.1cqw] font-semibold tracking-[0.1em] text-tinta/85 uppercase">
-            {libro.autor}
+            {libro.autorNombre}
           </p>
         </div>
       </div>

@@ -1,0 +1,111 @@
+---
+titulo: Cómo calcular las casillas del modelo 303 en una hoja de cálculo
+descripcion: >-
+  El método para pasar de tus facturas a las casillas del 303 sin sumar a mano: qué
+  necesitas antes de empezar, qué fórmula usar y los tres errores que más caros salen.
+fecha: 2026-06-18
+autor: g-g-alcedo
+sello: practico
+temas:
+  - impuestos
+  - excel
+  - autónomos
+libroRelacionado: excel-para-autonomos-en-espana
+recursoRelacionado: plantilla-iva-trimestral-autonomos
+imagen: null
+---
+
+Casi nadie tarda cuatro horas en hacer el trimestre porque el modelo 303 sea difícil.
+Se tarda cuatro horas porque los datos están en cuatro sitios: unas facturas en el
+correo, otras en una carpeta, los tickets en la cartera y el resto en la memoria. El
+formulario en sí se rellena en diez minutos cuando llegas con las sumas hechas.
+
+Este es el método para llegar con las sumas hechas.
+
+## Qué mide el 303 en realidad
+
+El modelo 303 es una resta. Por un lado, el IVA que has cobrado a tus clientes
+(**devengado**). Por otro, el IVA que has pagado en tus gastos y que puedes deducir
+(**soportado**). La diferencia es lo que ingresas a Hacienda, o lo que queda a tu
+favor para el trimestre siguiente.
+
+Todo lo demás son casillas para clasificar esas dos cifras por tipo de operación. Si
+tu actividad es sencilla —facturas a clientes en España al 21 %— vas a usar cuatro o
+cinco casillas y el resto se queda en blanco.
+
+## Lo que necesitas antes de abrir la hoja
+
+Dos tablas. Ni una más.
+
+### Tabla de facturas emitidas
+
+Una fila por factura, con estas columnas: fecha, número, cliente, base imponible,
+tipo de IVA, cuota de IVA y total. La cuota **no se teclea**: se calcula. Si la base
+está en `D2` y el tipo en `E2`, la cuota es `=D2*E2`.
+
+Guarda el tipo como número (`0,21`) y no como texto (`21 %`). Es la causa número uno
+de que las sumas no cuadren.
+
+### Tabla de facturas recibidas
+
+Las mismas columnas, más una que decide todo: **deducible sí o no**. Una casilla con
+`SÍ` o `NO` que rellenas al meter el gasto, cuando te acuerdas de para qué era, y no
+tres meses después.
+
+## La fórmula que hace el trabajo
+
+Con las dos tablas, cada casilla del 303 es un `SUMAR.SI.CONJUNTO`. Para la base
+imponible de las operaciones al 21 % de un trimestre:
+
+```
+=SUMAR.SI.CONJUNTO(Emitidas[Base];
+   Emitidas[Fecha];">="&$B$1;
+   Emitidas[Fecha];"<="&$B$2;
+   Emitidas[Tipo];0,21)
+```
+
+`$B$1` y `$B$2` son las fechas de inicio y fin del trimestre, escritas una sola vez
+en una celda. Cambias esas dos fechas y toda la hoja se recalcula para el trimestre
+siguiente: eso es la diferencia entre una plantilla y una suma.
+
+Para el IVA soportado, la misma fórmula sobre la tabla de recibidas, añadiendo el
+filtro de la columna de deducible:
+
+```
+=SUMAR.SI.CONJUNTO(Recibidas[Cuota];
+   Recibidas[Fecha];">="&$B$1;
+   Recibidas[Fecha];"<="&$B$2;
+   Recibidas[Deducible];"SÍ")
+```
+
+En la práctica te interesan cuatro resultados: base y cuota devengadas, base y cuota
+soportadas deducibles. Con esos cuatro números, el formulario se rellena solo.
+
+> La numeración de las casillas puede cambiar de un ejercicio a otro. Monta la hoja
+> por conceptos —devengado, deducible, resultado— y no por número de casilla, y no
+> tendrás que rehacerla cada año.
+
+## Los tres errores que más caros salen
+
+**Sumar totales en vez de bases.** La casilla de base imponible quiere el importe sin
+IVA. Si arrastras el total, declaras de más.
+
+**Meter dos veces la misma factura.** Pasa siempre en las facturas que llegan por
+correo y también en PDF. Una columna con el número de factura y un `CONTAR.SI` que se
+pinte de rojo si aparece repetido lo detecta al instante.
+
+**Deducir lo que no toca.** Un gasto es deducible si está afecto a la actividad, si
+tienes factura completa a tu nombre y si lo puedes justificar. Los tres, no dos de
+tres. La comida del sábado con un cliente que no aparece en ningún presupuesto es un
+regalo a la próxima inspección.
+
+## Antes de darle a presentar
+
+Cuatro comprobaciones, en este orden: que la numeración de facturas no tenga huecos;
+que la suma de bases por tipo cuadre con la suma total; que no haya ninguna fila con
+el tipo de IVA en blanco; y que el resultado del trimestre se parezca al del
+trimestre anterior. Si se parece muy poco, algo se ha quedado fuera.
+
+Esto no es asesoramiento fiscal: para tu caso concreto, tu asesor. Pero cuando
+llegues a él con estas dos tablas cuadradas, su factura se dedicará a lo que de verdad
+necesita criterio profesional.

@@ -78,7 +78,37 @@ lo dice explícitamente en pantalla para no engañar a nadie.
 
 ---
 
-## FASE 2 — Contenido _(pendiente)_
+## FASE 2 — Contenido · _en curso_
+
+### Objetivo
+
+Que el contenido editorial salga del repositorio y no del código, y que exista la
+página que vende: la ficha de libro. Al terminar, el sitio tiene catálogo real,
+fichas completas, landings de sello, autores y blog, todo indexable.
+
+### Qué voy a hacer y por qué
+
+| Decisión | Por qué |
+| --- | --- |
+| Contenido en `/content/{libros,autores,blog}` en MDX con frontmatter | El fundador edita un fichero de texto, no código. Va versionado en git, así que hay historial y se puede revertir. Cero coste de CMS. |
+| Validación con **Zod** y **build que falla** si falta un campo | Un libro sin precio o sin `sku` publicado en producción es dinero perdido. Mejor romper el despliegue que vender mal. Los mensajes de error dicen el fichero y el campo. |
+| Filtros del catálogo en cliente, sin parámetros en la URL | Todos los libros están en el HTML (indexables) y la página sigue siendo estática. La dimensión que sí interesa a Google —el sello— tiene su propia URL en `/sellos/[sello]`. |
+| Índice del libro con `<details>` nativo | Desplegable accesible y con teclado sin un byte de JavaScript. Radix aquí sería lujo. |
+| Barra de compra pegajosa en móvil con `IntersectionObserver` | Aparece al pasar el selector de formato. Es el patrón que más sube la conversión en móvil y cuesta ~1 kB. |
+| Imágenes OG generadas con `next/og` y la fuente por defecto | Satori necesita datos de fuente explícitos; meter Fraunces obligaría a versionar un TTF o a descargarlo en build. Se compensa con color de sello y jerarquía. Pendiente de mejora si añadimos el TTF a `/public`. |
+| Sin `aggregateRating` en el JSON-LD | No hay reseñas reales. Se activa el día que las haya, no antes. |
+
+### Fuera de alcance en esta fase
+
+`/content/productos` y `/content/recursos` (son tienda: Fase 3), Supabase, Resend,
+pasarela, área de cliente y las páginas legales definitivas.
+
+## FASE 2 bis — nota de la Fase 1
+
+Se añadió, a petición del fundador, `src/lib/garantia.ts`: los plazos de garantía
+(14 días) y de actualizaciones (12 meses) se calculan en un solo módulo que decide
+si siguen vigentes para una compra concreta. El texto de venta lee esos plazos del
+mismo sitio, así que no puede prometer algo que el sistema no cumpla.
 
 ## FASE 3 — Captura y tienda _(pendiente)_
 

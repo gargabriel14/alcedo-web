@@ -1,9 +1,11 @@
 import { TarjetaLibro } from "@/components/libros/TarjetaLibro";
 import { Contenedor } from "@/components/ui/Contenedor";
 import { TituloSeccion } from "@/components/ui/TituloSeccion";
-import { LIBROS } from "@/lib/datos/libros";
+import { todosLosLibros } from "@/lib/contenido/libros";
 
 export function UltimasPublicaciones() {
+  const libros = todosLosLibros().slice(0, 3);
+
   return (
     <section
       aria-labelledby="titulo-publicaciones"
@@ -19,7 +21,7 @@ export function UltimasPublicaciones() {
         />
 
         <ul className="mt-10 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-          {LIBROS.map((libro) => (
+          {libros.map((libro) => (
             <li key={libro.slug} className="flex">
               <TarjetaLibro libro={libro} />
             </li>
