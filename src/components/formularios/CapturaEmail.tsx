@@ -42,24 +42,39 @@ export function CapturaEmail({
   if (estado.estado === "ok") {
     return (
       <div
-        className={cn(
-          "rounded-lg border border-marca/35 bg-marca-suave p-5",
-          className,
-        )}
+        className={cn("rounded-lg border border-marca/35 bg-marca-suave p-5", className)}
         role="status"
       >
         <p className="font-titulares text-lg font-semibold text-texto">
-          Apuntado: {estado.email}
+          {estado.yaConfirmado ? "Ya estabas en la lista" : "Casi está"}
         </p>
+
         <p className="mt-1.5 text-sm leading-relaxed text-texto-tenue">
-          Formulario validado correctamente.{" "}
-          <strong className="font-semibold text-texto">
-            Pendiente de conectar (Fase 3):
-          </strong>{" "}
-          todavía no se guarda el dato ni se envía el correo con la plantilla. En
-          cuanto Supabase y Resend estén enchufados, este mismo formulario mandará
-          el email de confirmación y, al confirmar, el fichero.
+          {estado.yaConfirmado ? (
+            <>
+              Te acabamos de reenviar <strong>{recurso.titulo}</strong> a{" "}
+              <strong className="text-texto">{estado.email}</strong>. No hace falta
+              que confirmes nada otra vez.
+            </>
+          ) : (
+            <>
+              Te hemos escrito a{" "}
+              <strong className="text-texto">{estado.email}</strong>. Abre el correo y
+              pulsa el enlace: al confirmar te damos la descarga al momento. Si no
+              aparece en dos minutos, mira en spam.
+            </>
+          )}
         </p>
+
+        {/* Si el correo no ha salido, se dice. Nada de fingir que está enviado. */}
+        {!estado.correoEnviado ? (
+          <p className="mt-3 rounded-md border border-borde-fuerte bg-superficie px-3 py-2 text-xs leading-relaxed text-texto-tenue">
+            <strong className="font-semibold text-texto">Aviso para el equipo:</strong>{" "}
+            {estado.modoLocal
+              ? "estás en modo local (sin Supabase ni Resend). El alta se ha guardado en memoria y el correo se ha escrito en la consola del servidor."
+              : "el alta se ha guardado, pero el correo no ha podido enviarse. Revisa RESEND_API_KEY y EMAIL_REMITENTE."}
+          </p>
+        ) : null}
       </div>
     );
   }

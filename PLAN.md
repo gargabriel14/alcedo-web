@@ -148,6 +148,30 @@ Se añadió, a petición del fundador, `src/lib/garantia.ts`: los plazos de gara
 si siguen vigentes para una compra concreta. El texto de venta lee esos plazos del
 mismo sitio, así que no puede prometer algo que el sistema no cumpla.
 
-## FASE 3 — Captura y tienda _(pendiente)_
+## FASE 3 — Captura y tienda · _en curso_
+
+### Objetivo
+
+Que el sitio cobre y entregue. Al terminar, un desconocido puede comprar el PDF
+Premium, descargarlo al instante, recibirlo por correo y volver a descargarlo desde
+su cuenta doce meses después. Y quien no compra, deja su correo a cambio de una
+plantilla útil.
+
+### Qué voy a hacer y por qué
+
+| Decisión | Por qué |
+| --- | --- |
+| Capa de pago propia en `src/lib/pagos/` | Nadie fuera de esa carpeta importa el SDK de Paddle. Cambiar a Lemon Squeezy o Gumroad debe ser escribir un fichero nuevo, no rehacer la tienda. |
+| **Proveedor simulado por defecto** | La cuenta de Paddle se solicita cuando la web ya está publicada, porque revisan el negocio. Con el simulado se construye y se prueba la compra entera, de principio a fin, sin credenciales. |
+| Precio validado en servidor contra `/content/productos` | El cliente nunca manda el precio. Y si el precio del producto no cuadra con el de la ficha del libro, **el build falla**: dos precios distintos para lo mismo es una reclamación asegurada. |
+| Idempotencia por id de evento en tabla propia | Las pasarelas reintentan los webhooks. Sin esto, un reintento genera un pedido duplicado y un segundo correo al cliente. |
+| Descarga inmediata en `/checkout/exito`, sin esperar al correo | El momento de máxima confianza es justo tras pagar. Si ahí le pides que revise su bandeja de entrada, pierdes al que tiene el correo en otro dispositivo. |
+| Token de descarga firmado + límite de 5 + caducidad | Los enlaces se comparten. El límite protege el producto sin castigar al comprador honrado, que además siempre puede re-descargar desde su cuenta. |
+| Ficheros versionados en el catálogo | Es lo que hace **real** la promesa de «actualización gratuita 12 meses»: la descarga sirve siempre la última versión, y un script avisa por correo a quien esté en plazo. |
+| Modo local sin credenciales | Si faltan las variables de Supabase o Resend, la aplicación no revienta: guarda en memoria y escribe los correos por consola. Así se puede desarrollar y probar sin tocar producción. |
+
+### Fuera de alcance en esta fase
+
+Tests automáticos (Fase 4), `/publica-con-alcedo` y la auditoría Lighthouse final.
 
 ## FASE 4 — Pulido y escala _(pendiente)_

@@ -1,13 +1,16 @@
 import type { ClaveSello } from "@/lib/sellos";
 
 /**
- * TODO(contenido) — Lead magnets. En la Fase 2 pasan a `/content/recursos/*.mdx`
- * y en la Fase 3 cada uno tendrá su landing con doble opt-in y su fichero en
- * Supabase Storage.
+ * Lead magnets: los entregables gratuitos que se cambian por un correo.
  *
- * El activo real del negocio es la lista de correo, así que un lead magnet no
- * es «apúntate al boletín»: es un entregable con nombre propio que resuelve
- * algo concreto y que el lector usaría aunque no comprase nunca un libro.
+ * El activo real del negocio es la lista, así que un lead magnet no es
+ * «apúntate al boletín»: es un fichero con nombre propio que resuelve algo
+ * concreto y que el lector usaría aunque no comprase nunca un libro.
+ *
+ * El fichero vive en el mismo bucket privado que los productos de pago y solo se
+ * entrega **después de confirmar el correo** (doble opt-in), con una URL firmada
+ * de 24 horas. Regalar el enlace directo sin confirmar llena la lista de correos
+ * falsos y destroza la entregabilidad.
  */
 
 export interface Recurso {
@@ -23,6 +26,8 @@ export interface Recurso {
   libroRelacionado: string;
   /** Micro-lista de lo que incluye. Máximo tres, que se lean de un vistazo. */
   incluye: readonly string[];
+  /** Ruta dentro del bucket privado de Supabase Storage. */
+  fichero: { ruta: string; nombre: string };
 }
 
 export const RECURSOS: readonly Recurso[] = [
@@ -39,6 +44,10 @@ export const RECURSOS: readonly Recurso[] = [
       "Resumen automático con las casillas del 303",
       "Checklist de lo que revisar antes de presentar",
     ],
+    fichero: {
+      ruta: "recursos/plantilla-iva-trimestral-v1.xlsx",
+      nombre: "Plantilla de IVA trimestral (Excel)",
+    },
   },
   {
     slug: "calculadora-precio-hora",
@@ -53,6 +62,10 @@ export const RECURSOS: readonly Recurso[] = [
       "Comparador de tres escenarios de tarifa",
       "Guía de una página para subir precios sin perder clientes",
     ],
+    fichero: {
+      ruta: "recursos/calculadora-precio-hora-v1.xlsx",
+      nombre: "Calculadora de precio por hora (Excel)",
+    },
   },
   {
     slug: "mapa-de-luz-de-casa",
@@ -67,6 +80,10 @@ export const RECURSOS: readonly Recurso[] = [
       "Tabla de especies por nivel de luz",
       "Plano en blanco para rellenar",
     ],
+    fichero: {
+      ruta: "recursos/mapa-de-luz-v1.pdf",
+      nombre: "Mapa de luz de tu casa (PDF)",
+    },
   },
 ] as const;
 

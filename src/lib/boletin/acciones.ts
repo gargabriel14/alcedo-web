@@ -1,17 +1,27 @@
 "use server";
 
 import { z } from "zod";
+import { enviarCorreo } from "@/lib/correo/enviar";
+import { correoConfirmacion, correoEntregaRecurso } from "@/lib/correo/plantillas";
+import { obtenerRecurso } from "@/lib/datos/recursos";
+import {
+  altaSuscriptor,
+  modoLocal,
+  registrarEvento,
+  urlFirmadaDeFichero,
+} from "@/lib/tienda/almacen";
 
 /**
- * Alta en la lista de correo a cambio de un lead magnet.
+ * Alta en la lista de correo a cambio de un lead magnet, con doble opt-in.
  *
- * FASE 1 — valida en servidor y responde, pero TODAVÍA NO GUARDA NI ENVÍA NADA.
- * En la Fase 3 este mismo punto de entrada hará: alta en Supabase con
- * `confirmado = false`, correo de confirmación con Resend (doble opt-in), y
- * entrega del fichero con URL firmada de 24 h solo después de confirmar.
+ * El fichero **no se entrega aquí**: primero se manda un correo con un enlace de
+ * confirmación. Es un paso más y cuesta algunas altas, pero sin él la lista se
+ * llena de direcciones inventadas y de errores de tecleo, la tasa de rebote sube
+ * y el dominio acaba en spam. Una lista de mil correos confirmados vale más que
+ * una de cinco mil sin confirmar.
  *
- * La validación vive en el servidor a propósito: el cliente puede saltarse
- * cualquier comprobación, así que la del navegador es comodidad, no seguridad.
+ * La validación vive en el servidor a propósito: la del navegador es comodidad,
+ * no seguridad.
  */
 
 const esquemaAlta = z.object({
@@ -27,7 +37,15 @@ const esquemaAlta = z.object({
 
 export type EstadoAlta =
   | { estado: "inicial" }
-  | { estado: "ok"; email: string }
+  | {
+      estado: "ok";
+      email: string;
+      /** Ya había confirmado antes: se le manda el fichero directamente. */
+      yaConfirmado: boolean;
+      /** `false` si el correo no llegó a salir (modo local o fallo de Resend). */
+      correoEnviado: boolean;
+      modoLocal: boolean;
+    }
   | { estado: "error"; mensaje: string };
 
 export const ESTADO_ALTA_INICIAL: EstadoAlta = { estado: "inicial" };
@@ -50,18 +68,66 @@ export async function altaEnBoletin(
     };
   }
 
-  // Bot detectado: respondemos como si todo hubiera ido bien y no hacemos nada.
-  if (resultado.data.web) {
-    return { estado: "ok", email: resultado.data.email };
+  const { email, recurso: slugRecurso, web } = resultado.data;
+
+  // Bot detectado: se responde como si todo hubiera ido bien y no se hace nada.
+  if (web) {
+    return {
+      estado: "ok",
+      email,
+      yaConfirmado: false,
+      correoEnviado: true,
+      modoLocal: false,
+    };
   }
 
-  // TODO(Fase 3): alta en Supabase + correo de confirmación con Resend +
-  // evento `lead_captado` en la tabla de eventos.
-  if (process.env.NODE_ENV === "development") {
-    console.info(
-      `[boletín] alta pendiente de integración: ${resultado.data.email} → ${resultado.data.recurso}`,
+  const recurso = obtenerRecurso(slugRecurso);
+  if (!recurso) {
+    return { estado: "error", mensaje: "Ese recurso ya no está disponible." };
+  }
+
+  try {
+    const { token, yaEstaba } = await altaSuscriptor(email, recurso.slug);
+
+    await registrarEvento("lead_captado", {
+      recurso: recurso.slug,
+      confirmado: yaEstaba,
+    });
+
+    // Si ya había confirmado antes, no se le hace pasar otra vez por el aro:
+    // se le manda el fichero directamente.
+    if (yaEstaba) {
+      const url = await urlFirmadaDeFichero(recurso.fichero.ruta);
+      const enviado = url
+        ? await enviarCorreo(correoEntregaRecurso(email, recurso.titulo, url))
+        : false;
+
+      return {
+        estado: "ok",
+        email,
+        yaConfirmado: true,
+        correoEnviado: enviado,
+        modoLocal: modoLocal(),
+      };
+    }
+
+    const enviado = await enviarCorreo(
+      correoConfirmacion(email, token, recurso.titulo),
     );
-  }
 
-  return { estado: "ok", email: resultado.data.email };
+    return {
+      estado: "ok",
+      email,
+      yaConfirmado: false,
+      correoEnviado: enviado,
+      modoLocal: modoLocal(),
+    };
+  } catch (error) {
+    console.error("[boletín] fallo al dar de alta:", error);
+    return {
+      estado: "error",
+      mensaje:
+        "Algo ha fallado por nuestra parte. Inténtalo de nuevo en un minuto, por favor.",
+    };
+  }
 }

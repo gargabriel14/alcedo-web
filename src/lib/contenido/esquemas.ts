@@ -140,6 +140,51 @@ export const esquemaAutor = z.object({
 export type FrontmatterAutor = z.infer<typeof esquemaAutor>;
 
 // ---------------------------------------------------------------------------
+// Producto digital
+// ---------------------------------------------------------------------------
+
+/**
+ * Un fichero descargable, con su versión.
+ *
+ * La versión no es decorativa: es lo que hace real la promesa de «actualización
+ * gratuita 12 meses». La descarga sirve siempre la versión que hay aquí, y el
+ * script de aviso compara con la que había para saber a quién escribir.
+ */
+export const esquemaFichero = z.object({
+  nombre: z.string().min(5),
+  /** Ruta dentro del bucket privado de Supabase Storage. */
+  ruta: z.string().min(3),
+  version: z.string().min(1),
+  actualizado: fechaIso,
+  /** Tamaño aproximado, para avisar antes de descargar en móvil. */
+  megas: z.number().positive().optional(),
+});
+
+export const esquemaProducto = z.object({
+  /** Identificador estable. Aparece en las URL de compra: no se cambia nunca. */
+  sku: z.string().regex(/^[a-z0-9-]+$/, "Solo minúsculas, números y guiones"),
+  titulo: z.string().min(5),
+  descripcion: z.string().min(30),
+  precioEUR: precioEuros,
+  /**
+   * Id del precio en la pasarela activa. Se queda a `null` mientras se trabaja
+   * con el proveedor simulado; el checkout real lo exige.
+   */
+  idProveedorPago: z.string().nullable().default(null),
+  tipo: z.enum(["libro", "bundle"]),
+  /** Slug del libro, para productos de tipo `libro`. */
+  libroRelacionado: z.string().nullable().default(null),
+  /** SKUs incluidos, para productos de tipo `bundle`. */
+  bundleDe: z.array(z.string()).default([]),
+  ficheros: z.array(esquemaFichero).default([]),
+  /** A `false` deja de venderse sin borrar el histórico de pedidos. */
+  activo: z.boolean().default(true),
+});
+
+export type FrontmatterProducto = z.infer<typeof esquemaProducto>;
+export type Fichero = z.infer<typeof esquemaFichero>;
+
+// ---------------------------------------------------------------------------
 // Artículo del blog
 // ---------------------------------------------------------------------------
 
