@@ -2,7 +2,8 @@
 
 import { useActionState } from "react";
 import { Boton } from "@/components/ui/Boton";
-import { ESTADO_COMPRA_INICIAL, iniciarCompra } from "@/lib/tienda/acciones";
+import { iniciarCompra } from "@/lib/tienda/acciones";
+import { ESTADO_COMPRA_INICIAL } from "@/lib/tienda/estados";
 
 /**
  * Botón que abre el pago.

@@ -19,6 +19,11 @@ export interface RutaIndexable {
 export const RUTAS_ESTATICAS: readonly RutaIndexable[] = [
   { ruta: "/", prioridad: 1, frecuencia: "weekly" },
   { ruta: "/catalogo", prioridad: 0.9, frecuencia: "weekly" },
+  { ruta: "/recursos", prioridad: 0.8, frecuencia: "monthly" },
   { ruta: "/blog", prioridad: 0.8, frecuencia: "weekly" },
   { ruta: "/autores", prioridad: 0.5, frecuencia: "monthly" },
+  { ruta: "/legal/aviso", prioridad: 0.2, frecuencia: "yearly" },
+  { ruta: "/legal/privacidad", prioridad: 0.2, frecuencia: "yearly" },
+  { ruta: "/legal/cookies", prioridad: 0.2, frecuencia: "yearly" },
+  { ruta: "/legal/terminos", prioridad: 0.3, frecuencia: "yearly" },
 ] as const;

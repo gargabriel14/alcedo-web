@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { AvisoCookies } from "@/components/layout/AvisoCookies";
 import { Cabecera } from "@/components/layout/Cabecera";
 import { PieDePagina } from "@/components/layout/PieDePagina";
 import { ScriptTema } from "@/components/layout/ScriptTema";
@@ -93,6 +94,8 @@ export default function LayoutRaiz({ children }: { children: React.ReactNode }) 
         </main>
 
         <PieDePagina />
+
+        <AvisoCookies />
 
         <DatosEstructurados
           datos={grafoJsonLd(organizacionJsonLd(), sitioWebJsonLd())}

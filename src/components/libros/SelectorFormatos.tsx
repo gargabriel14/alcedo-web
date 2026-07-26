@@ -1,3 +1,4 @@
+import { EnlaceAmazon } from "@/components/tienda/EnlaceAmazon";
 import { EnlaceBoton } from "@/components/ui/Boton";
 import type { Libro } from "@/lib/contenido/libros";
 import { DIAS_GARANTIA, MESES_ACTUALIZACION } from "@/lib/garantia";
@@ -40,14 +41,9 @@ export function SelectorFormatos({ libro }: { libro: Libro }) {
           excluye={["Sin las plantillas ni los ficheros editables"]}
           accion={
             hayKindle ? (
-              <EnlaceBoton
-                href={libro.amazon.kindle!}
-                externo
-                variante="secundario"
-                completo
-              >
+              <EnlaceAmazon href={libro.amazon.kindle!} sku={libro.sku} formato="kindle">
                 Comprar en Amazon
-              </EnlaceBoton>
+              </EnlaceAmazon>
             ) : (
               <BotonPendiente>Próximamente en Amazon</BotonPendiente>
             )
@@ -88,14 +84,13 @@ export function SelectorFormatos({ libro }: { libro: Libro }) {
           excluye={["Sin las plantillas ni los ficheros editables"]}
           accion={
             hayTapaBlanda ? (
-              <EnlaceBoton
+              <EnlaceAmazon
                 href={libro.amazon.tapaBlanda!}
-                externo
-                variante="secundario"
-                completo
+                sku={libro.sku}
+                formato="tapa-blanda"
               >
                 Comprar en Amazon
-              </EnlaceBoton>
+              </EnlaceAmazon>
             ) : (
               <BotonPendiente>Próximamente en Amazon</BotonPendiente>
             )

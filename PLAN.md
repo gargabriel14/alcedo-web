@@ -148,7 +148,7 @@ Se añadió, a petición del fundador, `src/lib/garantia.ts`: los plazos de gara
 si siguen vigentes para una compra concreta. El texto de venta lee esos plazos del
 mismo sitio, así que no puede prometer algo que el sistema no cumpla.
 
-## FASE 3 — Captura y tienda · _en curso_
+## FASE 3 — Captura y tienda · _completada, a falta de credenciales_
 
 ### Objetivo
 
@@ -173,5 +173,52 @@ plantilla útil.
 ### Fuera de alcance en esta fase
 
 Tests automáticos (Fase 4), `/publica-con-alcedo` y la auditoría Lighthouse final.
+
+### Qué cambió (cierre de fase)
+
+- **Capa de pago desacoplada** en `src/lib/pagos/`: contrato propio (`crearCheckout`,
+  `verificarWebhook`, `normalizarPedido`), proveedor **simulado** y adaptador de
+  **Paddle** hecho contra su API REST, sin SDK. Nadie fuera de esa carpeta sabe con
+  quién se cobra.
+- **Catálogo de productos** en `/content/productos` con SKU, precio, ficheros
+  versionados y bundles. El build falla si el precio del producto no coincide con el
+  que anuncia la ficha del libro.
+- **Webhook idempotente** con verificación de firma; si el procesado falla se libera
+  el id para que el reintento de la pasarela pueda con él.
+- **Descargas**: token aleatorio revocable, caducidad de 30 días, límite de 5 y URL
+  firmada de 24 h desde un bucket privado. El fichero no pasa por nuestro servidor.
+- **`/checkout/exito`** con descarga inmediata, sin esperar al correo.
+- **Doble opt-in** completo: alta, correo de confirmación, entrega en la propia
+  página de confirmación y landing indexable por cada lead magnet.
+- **Área de cliente** con enlace mágico: compras, re-descarga, versión de cada
+  fichero y días de garantía restantes, calculados con `garantia.ts`.
+- **Legales** en `/content/legal` como plantillas con marcadores, incluida la
+  política de reembolso que Paddle exige, y **aviso de cookies** honesto.
+- **Analítica propia** sin cookies: endpoint con lista cerrada de eventos y registro
+  de `click_amazon` con `sendBeacon`.
+- **`pnpm avisar-actualizacion <sku>`**: avisa por correo a quien está en plazo de
+  actualizaciones cuando sube una versión. Simula por defecto; envía con `--de-verdad`.
+- **Modo local**: sin credenciales, la tienda entera funciona guardando en memoria y
+  escribiendo los correos por consola.
+
+### Verificado (con el proveedor simulado)
+
+| Prueba | Resultado |
+| --- | --- |
+| Webhook con firma correcta | 200, pedido creado |
+| Mismo webhook repetido | 200 `duplicado: true`, sin segundo pedido |
+| Webhook sin firma | 400, no se procesa |
+| Página de éxito | Token, correo enmascarado, 5 ficheros y días de garantía |
+| Descargas 1 a 5 | 200 |
+| Descarga 6 | 429 con instrucciones para regenerar el enlace |
+
+### Qué falta
+
+1. Pegar el esquema SQL en Supabase y subir los ficheros al bucket `productos`.
+2. Rellenar `.env.local` y las variables en Vercel.
+3. Revisión profesional de los cuatro documentos legales.
+4. Solicitar la cuenta de Paddle **con la web ya publicada** y pegar los id de precio.
+5. El adaptador de Paddle está escrito según su documentación pero **sin validar
+   contra eventos reales**: hay que probarlo en sandbox antes de vender.
 
 ## FASE 4 — Pulido y escala _(pendiente)_

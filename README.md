@@ -6,10 +6,43 @@ práctica ilustrada. Claim: _Conocimiento con puntería_.
 El sitio tiene un objetivo medible: **vender el PDF Premium y capturar correos**.
 Amazon es el canal de captación; aquí está el margen.
 
-> **Estado: fases 1 y 2 completadas.** Sistema de diseño, home, catálogo en MDX,
-> ficha de libro completa, sellos, autores y blog. Falta la tienda: pasarela de
-> pago, captura real de correos y área de cliente (Fase 3).
+> **Estado: fases 1, 2 y 3 completadas.** Sistema de diseño, catálogo en MDX, ficha
+> de libro, blog, tienda con pasarela desacoplada, doble opt-in, descargas firmadas
+> y área de cliente. Todo funciona **sin credenciales** contra un proveedor de pago
+> simulado. Falta conectar las cuentas reales y la Fase 4 (tests y Lighthouse).
 > El plan por fases está en [PLAN.md](PLAN.md).
+
+---
+
+## Poner la tienda en marcha (cuando tengas las cuentas)
+
+1. **Supabase** → SQL Editor → pega `supabase/migraciones/0001_esquema.sql` → Run.
+   Crea las tablas y el bucket privado `productos`.
+2. Sube los ficheros que vendes al bucket `productos`, respetando las rutas que
+   declara cada `content/productos/*.mdx`.
+3. Copia las claves a `.env.local` (y a Vercel → Settings → Environment Variables).
+   Los nombres y para qué sirve cada una están comentados en `.env.example`.
+4. **Resend** → verifica tu dominio y pon `EMAIL_REMITENTE` con una dirección de ese
+   dominio. Sin dominio verificado, los correos van a spam.
+5. **Paddle** se solicita **con la web ya publicada**: revisan el negocio, las
+   páginas legales y la política de reembolso antes de aprobar. Hasta entonces,
+   `PROVEEDOR_PAGO=simulado` permite probarlo todo.
+
+Mientras falte cualquiera de esas variables, el sitio entra en **modo local**:
+guarda en memoria, escribe los correos en la consola y lo dice en pantalla. No
+finge nunca que ha guardado o enviado algo.
+
+### Avisar de una actualización
+
+Cuando subas una versión nueva de un fichero, actualiza su `version` y su
+`actualizado` en `content/productos/<sku>.mdx` y lanza:
+
+```bash
+pnpm avisar-actualizacion pdf-excel-autonomos
+```
+
+Muestra a quién escribiría (solo a quien sigue dentro de sus 12 meses). Cuando lo
+veas bien, repite con `--de-verdad`.
 
 ---
 

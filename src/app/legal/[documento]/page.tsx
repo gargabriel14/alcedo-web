@@ -1,46 +1,23 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { EnPreparacion } from "@/components/layout/EnPreparacion";
+import { Mdx } from "@/components/mdx/Mdx";
+import { Contenedor } from "@/components/ui/Contenedor";
+import { esquemaLegal, type FrontmatterLegal } from "@/lib/contenido/esquemas";
+import { leerColeccion } from "@/lib/contenido/mdx";
+import { formatearFecha } from "@/lib/utils";
 
-/**
- * Documentos legales.
- *
- * De momento son páginas puente. Las plantillas reales (con los marcadores
- * `[[RAZÓN SOCIAL]]`, `[[NIF]]` y `[[DIRECCIÓN]]`) se escriben en la Fase 3,
- * antes de solicitar la cuenta de Paddle: la pasarela revisa que existan el
- * aviso legal, la privacidad y la política de reembolso antes de aprobar.
- */
-const DOCUMENTOS = {
-  aviso: {
-    titulo: "Aviso legal",
-    descripcion:
-      "Identificación del titular del sitio, condiciones de uso y propiedad intelectual de los contenidos.",
-  },
-  privacidad: {
-    titulo: "Política de privacidad",
-    descripcion:
-      "Qué datos recogemos, para qué, cuánto tiempo los guardamos y cómo ejercer tus derechos. Incluirá el detalle de la lista de correo y de los datos que trata la pasarela de pago.",
-  },
-  cookies: {
-    titulo: "Política de cookies",
-    descripcion:
-      "Qué cookies usa el sitio y cuáles necesitan tu consentimiento. Ahora mismo la web no instala ninguna cookie que no sea imprescindible.",
-  },
-  terminos: {
-    titulo: "Términos de compra",
-    descripcion:
-      "Condiciones de venta de los productos digitales, entrega, actualizaciones y política de reembolso de 14 días.",
-  },
-} as const;
+type Documento = FrontmatterLegal & { slug: string; cuerpo: string };
 
-type ClaveDocumento = keyof typeof DOCUMENTOS;
-
-export function generateStaticParams() {
-  return Object.keys(DOCUMENTOS).map((documento) => ({ documento }));
+function documentos(): Documento[] {
+  return leerColeccion("legal", esquemaLegal).map(({ slug, datos, cuerpo }) => ({
+    slug,
+    ...datos,
+    cuerpo,
+  }));
 }
 
-function esClaveDocumento(valor: string): valor is ClaveDocumento {
-  return valor in DOCUMENTOS;
+export function generateStaticParams() {
+  return documentos().map((documento) => ({ documento: documento.slug }));
 }
 
 export async function generateMetadata({
@@ -49,10 +26,17 @@ export async function generateMetadata({
   params: Promise<{ documento: string }>;
 }): Promise<Metadata> {
   const { documento } = await params;
+  const encontrado = documentos().find((candidato) => candidato.slug === documento);
+
+  if (!encontrado) return { title: "Documento no encontrado" };
 
   return {
-    title: esClaveDocumento(documento) ? DOCUMENTOS[documento].titulo : "Legal",
-    robots: { index: false, follow: true },
+    title: encontrado.titulo,
+    description: encontrado.resumen,
+    alternates: { canonical: `/legal/${encontrado.slug}` },
+    // Los legales no aportan nada en búsquedas, pero tienen que ser accesibles
+    // y enlazables: se indexan sin más pretensión.
+    robots: { index: true, follow: true },
   };
 }
 
@@ -62,12 +46,19 @@ export default async function PaginaLegal({
   params: Promise<{ documento: string }>;
 }) {
   const { documento } = await params;
+  const encontrado = documentos().find((candidato) => candidato.slug === documento);
 
-  if (!esClaveDocumento(documento)) notFound();
-
-  const datos = DOCUMENTOS[documento];
+  if (!encontrado) notFound();
 
   return (
-    <EnPreparacion fase="Fase 3" titulo={datos.titulo} descripcion={datos.descripcion} />
+    <Contenedor ancho="lectura" className="py-12 sm:py-16">
+      <p className="ojo-titular">Información legal</p>
+      <h1 className="mt-3 text-3xl sm:text-4xl">{encontrado.titulo}</h1>
+      <p className="mt-3 text-sm text-texto-tenue">
+        Última revisión: {formatearFecha(encontrado.actualizado)}
+      </p>
+
+      <Mdx fuente={encontrado.cuerpo} className="mt-8" />
+    </Contenedor>
   );
 }

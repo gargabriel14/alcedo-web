@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { enviarCorreo } from "@/lib/correo/enviar";
 import { correoConfirmacion, correoEntregaRecurso } from "@/lib/correo/plantillas";
+import type { EstadoAlta } from "@/lib/boletin/estado";
 import { obtenerRecurso } from "@/lib/datos/recursos";
 import {
   altaSuscriptor,
@@ -34,21 +35,6 @@ const esquemaAlta = z.object({
   /** Trampa para bots: es invisible para las personas, así que debe ir vacía. */
   web: z.string().max(0).optional(),
 });
-
-export type EstadoAlta =
-  | { estado: "inicial" }
-  | {
-      estado: "ok";
-      email: string;
-      /** Ya había confirmado antes: se le manda el fichero directamente. */
-      yaConfirmado: boolean;
-      /** `false` si el correo no llegó a salir (modo local o fallo de Resend). */
-      correoEnviado: boolean;
-      modoLocal: boolean;
-    }
-  | { estado: "error"; mensaje: string };
-
-export const ESTADO_ALTA_INICIAL: EstadoAlta = { estado: "inicial" };
 
 export async function altaEnBoletin(
   _estadoPrevio: EstadoAlta,

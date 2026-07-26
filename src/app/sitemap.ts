@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { todosLosAutores } from "@/lib/contenido/autores";
 import { articulosPublicados } from "@/lib/contenido/blog";
 import { todosLosLibros } from "@/lib/contenido/libros";
+import { RECURSOS } from "@/lib/datos/recursos";
 import { LISTA_SELLOS } from "@/lib/sellos";
 import { RUTAS_ESTATICAS } from "@/lib/seo/rutas";
 import { urlAbsoluta } from "@/lib/sitio";
@@ -54,10 +55,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
+  // Cada lead magnet tiene su propia URL indexable: posiciona por su cuenta y es
+  // el destino natural de los vídeos y de los enlaces del blog.
+  const landingsDeRecurso: MetadataRoute.Sitemap = RECURSOS.map((recurso) => ({
+    url: urlAbsoluta(`/recursos/${recurso.slug}`),
+    lastModified: ahora,
+    changeFrequency: "monthly",
+    priority: 0.7,
+  }));
+
   return [
     ...estaticas,
     ...fichasDeLibro,
     ...landingsDeSello,
+    ...landingsDeRecurso,
     ...entradasDeBlog,
     ...fichasDeAutor,
   ];

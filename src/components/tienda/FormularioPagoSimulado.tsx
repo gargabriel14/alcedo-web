@@ -2,7 +2,8 @@
 
 import { useActionState, useId } from "react";
 import { Boton } from "@/components/ui/Boton";
-import { completarPagoSimulado, ESTADO_COMPRA_INICIAL } from "@/lib/tienda/acciones";
+import { completarPagoSimulado } from "@/lib/tienda/acciones";
+import { ESTADO_COMPRA_INICIAL } from "@/lib/tienda/estados";
 
 /**
  * Formulario del pago simulado.

@@ -3,10 +3,8 @@
 import Link from "next/link";
 import { useActionState, useId } from "react";
 import { Boton } from "@/components/ui/Boton";
-import {
-  altaEnBoletin,
-  ESTADO_ALTA_INICIAL,
-} from "@/lib/boletin/acciones";
+import { altaEnBoletin } from "@/lib/boletin/acciones";
+import { ESTADO_ALTA_INICIAL } from "@/lib/boletin/estado";
 import type { Recurso } from "@/lib/datos/recursos";
 import { cn } from "@/lib/utils";
 

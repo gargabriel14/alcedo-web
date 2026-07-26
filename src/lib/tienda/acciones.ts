@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { obtenerProducto } from "@/lib/contenido/productos";
 import { proveedorDePago } from "@/lib/pagos/proveedor";
 import { registrarEvento } from "@/lib/tienda/almacen";
+import type { EstadoCompra } from "@/lib/tienda/estados";
 import { urlAbsoluta } from "@/lib/sitio";
 
 /**
@@ -13,10 +14,6 @@ import { urlAbsoluta } from "@/lib/sitio";
  * del catálogo del servidor. Es la regla que impide que alguien manipule el
  * formulario y se lleve un libro de 29 € por un euro.
  */
-
-export type EstadoCompra = { estado: "inicial" } | { estado: "error"; mensaje: string };
-
-export const ESTADO_COMPRA_INICIAL: EstadoCompra = { estado: "inicial" };
 
 export async function iniciarCompra(
   _estadoPrevio: EstadoCompra,

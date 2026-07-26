@@ -140,6 +140,20 @@ export const esquemaAutor = z.object({
 export type FrontmatterAutor = z.infer<typeof esquemaAutor>;
 
 // ---------------------------------------------------------------------------
+// Documento legal
+// ---------------------------------------------------------------------------
+
+export const esquemaLegal = z.object({
+  titulo: z.string().min(5),
+  /** Fecha de la última revisión. Se muestra al pie del documento. */
+  actualizado: fechaIso,
+  /** Resumen en una frase, para los metadatos. */
+  resumen: z.string().min(30),
+});
+
+export type FrontmatterLegal = z.infer<typeof esquemaLegal>;
+
+// ---------------------------------------------------------------------------
 // Producto digital
 // ---------------------------------------------------------------------------
 
