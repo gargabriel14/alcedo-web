@@ -31,24 +31,16 @@ const fraunces = Fraunces({
 });
 
 /**
- * Inter va con `optional` y no con `swap`, y es una decisión medida.
+ * Las dos van con `display: swap`.
  *
- * Con `swap`, el navegador pinta el texto con la fuente del sistema y lo vuelve a
- * pintar cuando llega Inter. Ese segundo repintado cuenta como un LCP nuevo: en
- * la auditoría de móvil pasaba de 0,9 s a 3,6 s **sin que cambiara nada de lo que
- * ve el usuario**, y el LCP es el dato que Google usa para posicionar.
- *
- * Con `optional`, si la fuente no llega a tiempo se queda la del sistema en esa
- * primera pantalla y entra ya cacheada en la siguiente. Como `next/font` ajusta
- * las métricas del sustituto, no hay salto de maquetación: el visitante no nota
- * la diferencia, y el LCP se queda pegado al FCP.
- *
- * Fraunces se mantiene en `swap` porque los titulares sí llevan el carácter de la
- * marca y ahí sí compensa esperar.
+ * Se probó `optional` en Inter con la idea de que el repintado al llegar la fuente
+ * estuviera empujando el LCP. La medición dijo que no: mismo LCP con las dos
+ * opciones. Como no compraba nada, se vuelve a `swap`, que es lo que garantiza que
+ * el lector acabe viendo siempre la tipografía de la marca.
  */
 const inter = Inter({
   subsets: ["latin"],
-  display: "optional",
+  display: "swap",
   variable: "--fuente-texto",
 });
 
