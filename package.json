@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "verificar": "pnpm typecheck && pnpm lint && pnpm build",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "verificar": "pnpm typecheck && pnpm lint && pnpm test && pnpm build",
     "nuevo-libro": "node scripts/nuevo-libro.mts",
     "avisar-actualizacion": "node --env-file-if-exists=.env.local scripts/avisar-actualizacion.mts"
   },
@@ -32,14 +34,17 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.0",
     "@tailwindcss/postcss": "^4",
     "@types/mdx": "^2.0.14",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^6.0.4",
     "eslint": "^9",
     "eslint-config-next": "16.2.11",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.10"
   }
 }

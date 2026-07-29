@@ -221,4 +221,86 @@ Tests automáticos (Fase 4), `/publica-con-alcedo` y la auditoría Lighthouse fi
 5. El adaptador de Paddle está escrito según su documentación pero **sin validar
    contra eventos reales**: hay que probarlo en sandbox antes de vender.
 
-## FASE 4 — Pulido y escala _(pendiente)_
+## FASE 4 — Pulido y escala · _en curso_
+
+### Objetivo
+
+Que lo construido no se rompa sin avisar, que cargue rápido en un móvil con mala
+cobertura y que se pueda enseñar a un autor externo.
+
+### Qué voy a hacer y por qué
+
+| Decisión | Por qué |
+| --- | --- |
+| Vitest sobre la lógica que toca dinero | Precios, tokens, límite de descargas y plazos de garantía. Un fallo ahí no da error: cobra de menos, regala descargas o incumple una promesa por escrito. Es justo lo que no se detecta mirando la pantalla. |
+| Playwright solo en dos flujos | Captura de correo y compra completa. Son los dos caminos que generan dinero; el resto se cubre con tipos y con los tests de lógica. Veinte tests de navegador que tardan cinco minutos no los ejecuta nadie. |
+| Playwright contra el **proveedor simulado** | La compra se prueba de verdad, de la ficha a la descarga, sin credenciales y sin mover un euro. Es la razón por la que el proveedor simulado existe. |
+| Lighthouse sobre el build de producción | En modo desarrollo las cifras no valen: no hay minificado y sí hay sobrecarga de recarga en caliente. |
+| i18n preparado, no implementado | Montar `/en` sin contenido en inglés añade rutas vacías y complejidad. Se deja documentado el camino y sin nada que lo bloquee. |
+
+### Qué cambió (cierre de fase)
+
+- **41 tests de Vitest** sobre lo que toca dinero: plazos de garantía y
+  actualizaciones, formato y coherencia de precios, herencia de ficheros en los
+  bundles, validación del frontmatter, índice y tiempo de lectura, y el proveedor
+  de pago. Incluye el test que más importa: **el importe sale del catálogo del
+  servidor aunque el evento del webhook venga manipulado**.
+- **9 tests de Playwright** en móvil sobre los dos flujos que dan dinero: captura de
+  correo (incluido el rechazo de un correo inválido y el enlace caducado) y compra
+  completa de la ficha a la descarga, con el límite de 5 descargas comprobado.
+- **`/publica-con-alcedo`**: landing de captación para Alcedo Autores con formulario
+  de propuesta de cuatro campos, sin prometer ningún porcentaje que todavía no
+  existe por contrato.
+- **Optimizaciones reales de carga**: subconjunto `latin` en las dos fuentes y un
+  solo grosor de Fraunces (fuentes de 201 kB a 66 kB), analítica de Vercel solo en
+  Vercel, y aviso de cookies cargado aparte. **Peso total de la portada: 457 kB → 321 kB.**
+- **Accesibilidad**: corregido el nombre accesible del logo, que no coincidía con su
+  texto visible y rompía la navegación por voz.
+
+### Auditoría Lighthouse (móvil, build de producción)
+
+| Categoría | Resultado |
+| --- | --- |
+| Accesibilidad | **100** |
+| Buenas prácticas | **100** |
+| SEO | **100** |
+| Rendimiento | **77–80** en local (ver abajo) |
+
+Escritorio: rendimiento 99, accesibilidad 100, buenas prácticas 96 → 100 tras los
+arreglos.
+
+**El rendimiento no llega a 95 midiendo en local, y conviene entender por qué antes
+de tocar nada más.** Tres mediciones del mismo build:
+
+| Condiciones | Rendimiento | LCP | TBT |
+| --- | --- | --- | --- |
+| Móvil completo (CPU ×4 + 4G lenta) | 77–80 | 3,6 s | 320–470 ms |
+| Sin freno de CPU | 90 | 3,4 s | 10 ms |
+| Sin freno de red ni CPU | 93 | 2,6 s | 0 ms |
+
+El TBT se desploma de 400 ms a 10 ms al quitar el freno de CPU: casi todo el castigo
+viene de emular un móvil lento **en la misma máquina que está sirviendo la web**.
+Y la red simulada (1,6 Mbps) tiene que tragarse 321 kB sin CDN, sin HTTP/2 y sin
+Brotli, tres cosas que sí hay en Vercel.
+
+**La medición que cuenta es la de la URL desplegada**, y es la que falta:
+
+```bash
+npx lighthouse https://TU-DOMINIO --view --only-categories=performance,accessibility,best-practices,seo
+```
+
+Si ahí el rendimiento siguiera por debajo de 95, el siguiente recorte es el
+JavaScript de cliente (187 kB): cargar el menú móvil de Radix solo al pulsarlo.
+
+### Preparación para `/en`
+
+No se implementa, pero nada lo bloquea:
+
+- El idioma del documento sale de `SITIO.idioma`, no está escrito a mano.
+- Todo el contenido editorial vive en `/content`, así que la versión inglesa sería
+  `content/en/{libros,blog,autores}` sin tocar los componentes.
+- El camino es un segmento `[idioma]` en `src/app` con `generateStaticParams`, y
+  añadir `alternates.languages` en `generateMetadata`.
+- Lo que **no** hay que hacer es traducir con una librería de cadenas: aquí el
+  contenido es el producto, y un libro en inglés es un libro distinto, no el mismo
+  con otras etiquetas.

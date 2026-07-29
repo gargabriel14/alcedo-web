@@ -22,6 +22,7 @@ export const RUTAS_ESTATICAS: readonly RutaIndexable[] = [
   { ruta: "/recursos", prioridad: 0.8, frecuencia: "monthly" },
   { ruta: "/blog", prioridad: 0.8, frecuencia: "weekly" },
   { ruta: "/autores", prioridad: 0.5, frecuencia: "monthly" },
+  { ruta: "/publica-con-alcedo", prioridad: 0.4, frecuencia: "monthly" },
   { ruta: "/legal/aviso", prioridad: 0.2, frecuencia: "yearly" },
   { ruta: "/legal/privacidad", prioridad: 0.2, frecuencia: "yearly" },
   { ruta: "/legal/cookies", prioridad: 0.2, frecuencia: "yearly" },

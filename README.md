@@ -6,7 +6,7 @@ práctica ilustrada. Claim: _Conocimiento con puntería_.
 El sitio tiene un objetivo medible: **vender el PDF Premium y capturar correos**.
 Amazon es el canal de captación; aquí está el margen.
 
-> **Estado: fases 1, 2 y 3 completadas.** Sistema de diseño, catálogo en MDX, ficha
+> **Estado: las cuatro fases completadas.** Sistema de diseño, catálogo en MDX, ficha
 > de libro, blog, tienda con pasarela desacoplada, doble opt-in, descargas firmadas
 > y área de cliente. Todo funciona **sin credenciales** contra un proveedor de pago
 > simulado. Falta conectar las cuentas reales y la Fase 4 (tests y Lighthouse).
@@ -79,7 +79,15 @@ ninguna clave: el sitio funciona entero sin servicios externos.
 | `pnpm start` | Sirve el build de producción en local (para medir de verdad). |
 | `pnpm typecheck` | Solo la comprobación de tipos. |
 | `pnpm lint` | ESLint. |
-| `pnpm verificar` | Tipos + lint + build. **Pásalo antes de cada despliegue.** |
+| `pnpm test` | Tests de lógica (precios, tokens, garantía, contenido). Segundos. |
+| `pnpm test:e2e` | Tests de navegador: captura de correo y compra completa. |
+| `pnpm verificar` | Tipos + lint + tests + build. **Pásalo antes de cada despliegue.** |
+
+La primera vez que ejecutes `pnpm test:e2e` hace falta descargar el navegador:
+
+```bash
+npx playwright install chromium
+```
 
 ---
 

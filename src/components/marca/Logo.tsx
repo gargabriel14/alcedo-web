@@ -46,12 +46,11 @@ export function Logo({ comoEnlace = false, soloIsotipoEnMovil = false, className
   );
 
   if (comoEnlace) {
+    // Sin `aria-label`: el nombre accesible sale del propio texto visible. Poner
+    // una etiqueta distinta de lo que se lee en pantalla rompe a quien navega por
+    // voz («pulsa Editorial Alcedo» tiene que funcionar) y Lighthouse lo marca.
     return (
-      <Link
-        href="/"
-        aria-label="Editorial Alcedo, ir a la portada"
-        className="rounded-sm"
-      >
+      <Link href="/" className="rounded-sm">
         {contenido}
       </Link>
     );
