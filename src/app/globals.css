@@ -16,6 +16,9 @@
   --color-hueso: #faf8f3;
   --color-tinta: #1a1a1a;
   --color-martin: #0e7c9b;
+  --color-crema: #f5f1e8;
+  --color-carbon: #2d2d2d;
+  --color-papel: #faf9f7;
 
   --font-titulares: var(--fuente-titulares), ui-serif, Georgia, "Times New Roman", serif;
   --font-texto: var(--fuente-texto), ui-sans-serif, system-ui, -apple-system, sans-serif;
@@ -23,6 +26,12 @@
   /* Medida de línea para artículos: 65–75 caracteres. */
   --container-medida: 68ch;
   --container-lectura: 46rem;
+
+  /* Duraciones de animación premium */
+  --duration-lenta: 700ms;
+  --duration-media: 400ms;
+  --duration-rapida: 200ms;
+  --duration-instantanea: 100ms;
 }
 
 /* ---------------------------------------------------------------------------
@@ -212,6 +221,8 @@
    Solo las del cajón de navegación. Nada de librerías: son cuatro keyframes y
    `prefers-reduced-motion` ya las neutraliza arriba.
 --------------------------------------------------------------------------- */
+
+/* Animaciones premium para scroll reveal y efectos sutiles */
 @keyframes aparecer {
   from {
     opacity: 0;
@@ -234,6 +245,89 @@
   to {
     translate: 100% 0;
   }
+}
+
+/**
+ * Scroll reveal: elementos que aparecen suavemente al hacer scroll.
+ * Se aplicará con la clase `.reveal` en componentes que entren en viewport.
+ */
+@keyframes reveal-suave {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/**
+ * Flotar: para libros y elementos que "levitan" sutilmente.
+ * Duración larga para que sea casi imperceptible.
+ */
+@keyframes flotar {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/**
+ * Resplandor: efecto de luz sutil para hover en portadas.
+ */
+@keyframes resplandor {
+  0%, 100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/**
+ * Girar lomo: rotación sutil para mostrar el grosor del libro.
+ */
+@keyframes girar-lomo {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(-12deg);
+  }
+}
+
+/**
+ * Entrada hero: animación inicial para elementos del hero principal.
+ */
+@keyframes entrada-hero {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Clases utilitarias para animaciones */
+.reveal-suave {
+  animation: reveal-suave var(--duration-lenta) ease-out forwards;
+}
+
+.flotar {
+  animation: flotar 6s ease-in-out infinite;
+}
+
+.resplandor {
+  animation: resplandor 3s ease-in-out infinite;
+}
+
+.entrada-hero {
+  animation: entrada-hero var(--duration-lenta) ease-out forwards;
 }
 
 /* ---------------------------------------------------------------------------
@@ -393,5 +487,36 @@
 
   &:focus-visible {
     translate: 0 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   7. Utilidades para efectos 3D y microinteracciones premium
+--------------------------------------------------------------------------- */
+@utility libro-3d {
+  /* Contenedor base para efectos 3D de libros */
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+@utility hover-elegante {
+  /* Transición suave para hover states premium */
+  transition: all var(--duration-media) cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px -8px rgb(0 0 0 / 0.15);
+  }
+}
+
+@utility fade-in-up {
+  /* Utilidad para animaciones de entrada */
+  opacity: 0;
+  transform: translateY(20px);
+  
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity var(--duration-media) ease-out, transform var(--duration-media) ease-out;
   }
 }
