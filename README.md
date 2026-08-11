@@ -6,6 +6,9 @@ práctica ilustrada. Claim: _Conocimiento con puntería_.
 El sitio tiene un objetivo medible: **vender el PDF Premium y capturar correos**.
 Amazon es el canal de captación; aquí está el margen.
 
+> **PageSpeed Insights en producción:** móvil 96 · 100 · 100 · 100 ·
+> ordenador 100 · 100 · 100 · 100.
+>
 > **Estado: las cuatro fases completadas.** Sistema de diseño, catálogo en MDX, ficha
 > de libro, blog, tienda con pasarela desacoplada, doble opt-in, descargas firmadas
 > y área de cliente. Todo funciona **sin credenciales** contra un proveedor de pago

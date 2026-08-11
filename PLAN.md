@@ -296,7 +296,35 @@ cobertura y que se pueda enseñar a un autor externo.
 - **Accesibilidad**: corregido el nombre accesible del logo, que no coincidía con su
   texto visible y rompía la navegación por voz.
 
-### Auditoría Lighthouse (móvil, build de producción)
+### Auditoría definitiva — PageSpeed Insights sobre producción
+
+Medido por Google sobre `https://alcedo-web.vercel.app/`, que es la única medición
+que vale: sin la CPU del portátil compitiendo con el servidor.
+
+| Categoría | Móvil | Ordenador |
+| --- | --- | --- |
+| Rendimiento | **96** | **100** |
+| Accesibilidad | **100** | 100 |
+| Prácticas recomendadas | **100** | 100 |
+| SEO | **100** | 100 |
+
+Métricas en móvil: **FCP 0,9 s · LCP 2,7 s · TBT 0 ms · CLS 0 · Speed Index 2,8 s**.
+En ordenador: FCP 0,3 s · LCP 0,4 s · TBT 10 ms · CLS 0.
+
+**Objetivo del brief cumplido**: los cuatro apartados por encima de 95 en móvil.
+
+Queda una cosa a medias: el brief pedía además **LCP < 2,0 s** y está en 2,7 s, dentro
+de la banda «mejorable» de Google (2,5–4,0 s). El elemento que marca el LCP es hoy el
+párrafo del hero, porque no hay portadas reales. Cuando entren, el LCP pasará a ser
+una imagen AVIF con `priority` y precarga, que es justo el caso que Chrome mide mejor.
+Volver a medir entonces, antes de tocar nada más.
+
+Lo que PageSpeed sigue señalando, por orden de lo que aportaría: JavaScript heredado
+para navegadores antiguos (~11 kB), peticiones que bloquean el renderizado (~150 ms) y
+JavaScript sin usar (~40 kB). Nada de eso mueve la aguja mientras el LCP dependa del
+contenido de ejemplo.
+
+### Auditoría previa en local (por qué no servía)
 
 | Categoría | Resultado |
 | --- | --- |
