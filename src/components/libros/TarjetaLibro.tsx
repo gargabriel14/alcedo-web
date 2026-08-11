@@ -38,7 +38,7 @@ export function TarjetaLibro({
           decorativa
           prioridad={prioridad}
           sizes="(min-width: 1024px) 20rem, (min-width: 640px) 30vw, 45vw"
-          claseLibro="group-hover:[transform:rotateY(24deg)_translateY(-10px)]"
+          claseLibro="group-hover:[--giro-y:24deg] group-hover:[--elevacion:-10px]"
         />
 
         {estado ? (

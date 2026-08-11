@@ -5,6 +5,7 @@ import { BarraCompraMovil } from "@/components/libros/BarraCompraMovil";
 import { EntregablesLibro } from "@/components/libros/EntregablesLibro";
 import { FaqLibro } from "@/components/libros/FaqLibro";
 import { IndiceLibro } from "@/components/libros/IndiceLibro";
+import { LibroInteractivo } from "@/components/libros/LibroInteractivo";
 import { MuestraGratuita } from "@/components/libros/MuestraGratuita";
 import { PortadaLibro } from "@/components/libros/PortadaLibro";
 import { ResenasLibro } from "@/components/libros/ResenasLibro";
@@ -99,11 +100,17 @@ export default async function PaginaLibro({
 
           <div className="grid gap-8 sm:grid-cols-[minmax(0,15rem)_1fr] sm:gap-10 lg:grid-cols-[minmax(0,20rem)_1fr] lg:gap-14">
             <div className="mx-auto w-[62%] max-w-56 sm:mx-0 sm:w-full sm:max-w-none">
-              <PortadaLibro
-                libro={aTarjeta(libro)}
-                prioridad
-                sizes="(min-width: 1024px) 20rem, (min-width: 640px) 15rem, 62vw"
-              />
+              {/* En la página que vende, el libro se puede coger con la mirada:
+                  gira siguiendo al cursor y la luz barre la cubierta. */}
+              <LibroInteractivo intensidad={12}>
+                <PortadaLibro
+                  libro={aTarjeta(libro)}
+                  prioridad
+                  grosor={46}
+                  giro={18}
+                  sizes="(min-width: 1024px) 20rem, (min-width: 640px) 15rem, 62vw"
+                />
+              </LibroInteractivo>
             </div>
 
             <div className="min-w-0">

@@ -16,9 +16,6 @@
   --color-hueso: #faf8f3;
   --color-tinta: #1a1a1a;
   --color-martin: #0e7c9b;
-  --color-crema: #f5f1e8;
-  --color-carbon: #2d2d2d;
-  --color-papel: #faf9f7;
 
   --font-titulares: var(--fuente-titulares), ui-serif, Georgia, "Times New Roman", serif;
   --font-texto: var(--fuente-texto), ui-sans-serif, system-ui, -apple-system, sans-serif;
@@ -26,12 +23,6 @@
   /* Medida de línea para artículos: 65–75 caracteres. */
   --container-medida: 68ch;
   --container-lectura: 46rem;
-
-  /* Duraciones de animación premium */
-  --duration-lenta: 700ms;
-  --duration-media: 400ms;
-  --duration-rapida: 200ms;
-  --duration-instantanea: 100ms;
 }
 
 /* ---------------------------------------------------------------------------
@@ -250,21 +241,6 @@
 }
 
 /**
- * Scroll reveal: elementos que aparecen suavemente al hacer scroll.
- * Se aplicará con la clase `.reveal` en componentes que entren en viewport.
- */
-@keyframes reveal-suave {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/**
  * Flotar: para libros y elementos que «levitan» sutilmente.
  *
  * Había dos definiciones de este keyframe, una por rama. Se queda el recorrido de
@@ -281,60 +257,6 @@
   }
 }
 
-/**
- * Resplandor: efecto de luz sutil para hover en portadas.
- */
-@keyframes resplandor {
-  0%, 100% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 0.6;
-  }
-}
-
-/**
- * Girar lomo: rotación sutil para mostrar el grosor del libro.
- */
-@keyframes girar-lomo {
-  from {
-    transform: rotateY(0deg);
-  }
-  to {
-    transform: rotateY(-12deg);
-  }
-}
-
-/**
- * Entrada hero: animación inicial para elementos del hero principal.
- */
-@keyframes entrada-hero {
-  from {
-    opacity: 0;
-    transform: translateY(32px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Clases utilitarias para animaciones */
-.reveal-suave {
-  animation: reveal-suave var(--duration-lenta) ease-out forwards;
-}
-
-.flotar {
-  animation: flotar 6s ease-in-out infinite;
-}
-
-.resplandor {
-  animation: resplandor 3s ease-in-out infinite;
-}
-
-.entrada-hero {
-  animation: entrada-hero var(--duration-lenta) ease-out forwards;
-}
 
 /* ---------------------------------------------------------------------------
    5. Prosa
@@ -509,6 +431,12 @@
   perspective: 1400px;
 }
 
+/* Capa intermedia: aquí va la flotación, para no pisar el giro del libro.
+   Necesita `preserve-3d` o aplanaría el volumen de lo que lleva dentro. */
+.envoltorio-libro {
+  transform-style: preserve-3d;
+}
+
 .libro-3d {
   position: relative;
   aspect-ratio: 2 / 3;
@@ -516,7 +444,52 @@
   transform-style: preserve-3d;
   /* Grosor del lomo. Se sube en las portadas grandes. */
   --grosor: 26px;
-  transition: transform 0.9s var(--suave, cubic-bezier(0.22, 0.61, 0.21, 1));
+  /*
+    El giro se compone de tres piezas independientes para que no se estorben:
+      --giro      reposo (lo fija el componente)
+      --giro-y/x  seguimiento del cursor o del hover
+      --elevacion despegue al pasar por encima
+    Así una tarjeta puede animar el hover por CSS y el hero seguir al ratón por
+    JavaScript sin que uno sobrescriba al otro.
+  */
+  transform: rotateY(calc(var(--giro, 0deg) + var(--giro-y, 0deg)))
+    rotateX(var(--giro-x, 0deg)) translateY(var(--elevacion, 0px));
+  transition: transform var(--velocidad-giro, 0.9s) var(--suave, cubic-bezier(0.22, 0.61, 0.21, 1));
+}
+
+/*
+  Brillo de la cubierta: una banda de luz que barre el papel al girar el libro.
+  Es lo que separa «un rectángulo rotado» de «un objeto con superficie». Va en
+  `opacity` y `transform`, así que no cuesta un repintado.
+*/
+.brillo-portada {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    rgb(255 255 255 / 0.55) 50%,
+    transparent 65%
+  );
+  transform: translateX(calc(var(--brillo, 0) * 55%));
+  transition:
+    opacity 0.5s ease,
+    transform 0.2s linear;
+}
+
+.escena-libro:hover .brillo-portada,
+.escena-libro:focus-within .brillo-portada,
+.group:hover .brillo-portada {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brillo-portada {
+    display: none;
+  }
 }
 
 .cara-libro {

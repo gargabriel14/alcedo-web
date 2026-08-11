@@ -16,10 +16,12 @@ interface PropsPortadaLibro {
   decorativa?: boolean;
   /** Grosor del lomo en píxeles. Súbelo en las portadas grandes. */
   grosor?: number;
-  /** Giro en grados sobre el eje vertical. 0 = de frente. */
+  /** Giro de reposo en grados sobre el eje vertical. 0 = de frente. */
   giro?: number;
   /** Clases para el bloque del libro (por ejemplo, giro al pasar el cursor). */
   claseLibro?: string;
+  /** Clases para la capa que flota. Se separa para no pisar el giro. */
+  claseEnvoltorio?: string;
   className?: string;
 }
 
@@ -47,6 +49,7 @@ export function PortadaLibro({
   grosor = 26,
   giro = 0,
   claseLibro,
+  claseEnvoltorio,
   className,
 }: PropsPortadaLibro) {
   const sello = obtenerSello(libro.sello);
@@ -55,41 +58,50 @@ export function PortadaLibro({
 
   return (
     <div className={cn("escena-libro relative", className)}>
-      <div
-        className={cn("libro-3d", claseLibro)}
-        style={
-          {
-            "--grosor": `${grosor}px`,
-            "--color-libro": sello.hex,
-            transform: giro ? `rotateY(${giro}deg)` : undefined,
-          } as React.CSSProperties
-        }
-        role={decorativa ? "presentation" : "img"}
-        aria-label={decorativa ? undefined : descripcion}
-        aria-hidden={decorativa ? true : undefined}
-      >
-        <span className="cara-libro cara-contra" aria-hidden="true" />
-        <span className="cara-libro cara-canto" aria-hidden="true" />
+      <div className={cn("envoltorio-libro", claseEnvoltorio)}>
+        <div
+          className={cn("libro-3d", claseLibro)}
+          style={
+            {
+              "--grosor": `${grosor}px`,
+              "--color-libro": sello.hex,
+              "--giro": `${giro}deg`,
+            } as React.CSSProperties
+          }
+          role={decorativa ? "presentation" : "img"}
+          aria-label={decorativa ? undefined : descripcion}
+          aria-hidden={decorativa ? true : undefined}
+        >
+          <span className="cara-libro cara-contra" aria-hidden="true" />
+          <span className="cara-libro cara-canto" aria-hidden="true" />
 
-        <span className="cara-libro cara-lomo" aria-hidden="true">
-          <span>
-            {libro.titulo} · {libro.autorNombre}
+          <span className="cara-libro cara-lomo" aria-hidden="true">
+            <span>
+              {libro.titulo} · {libro.autorNombre}
+            </span>
           </span>
-        </span>
 
-        <div className="cara-libro cara-portada @container">
-          {libro.portada ? (
-            <Image
-              src={libro.portada.src}
-              alt=""
-              fill
-              sizes={sizes}
-              priority={prioridad}
-              className="object-cover"
-            />
-          ) : (
-            <PortadaTipografica libro={libro} colorSello={sello.hex} nombreSello={sello.nombre} />
-          )}
+          <div className="cara-libro cara-portada @container">
+            {libro.portada ? (
+              <Image
+                src={libro.portada.src}
+                alt=""
+                fill
+                sizes={sizes}
+                priority={prioridad}
+                className="object-cover"
+              />
+            ) : (
+              <PortadaTipografica
+                libro={libro}
+                colorSello={sello.hex}
+                nombreSello={sello.nombre}
+              />
+            )}
+
+            {/* Barrido de luz sobre el papel. Decorativo. */}
+            <span className="brillo-portada" aria-hidden="true" />
+          </div>
         </div>
       </div>
 

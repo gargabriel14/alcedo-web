@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { CapturaEmail } from "@/components/formularios/CapturaEmail";
+import { LibroInteractivo } from "@/components/libros/LibroInteractivo";
 import { PortadaLibro } from "@/components/libros/PortadaLibro";
 import { BadgeSello } from "@/components/ui/BadgeSello";
 import { EnlaceBoton } from "@/components/ui/Boton";
@@ -84,17 +85,21 @@ export function Hero() {
                 Libro destacado
               </p>
 
-              <Link href={`/libro/${libro.slug}`} tabIndex={-1} aria-hidden="true">
-                <PortadaLibro
-                  libro={aTarjeta(libro)}
-                  decorativa
-                  prioridad
-                  grosor={40}
-                  giro={16}
-                  sizes="(min-width: 1024px) 20rem, (min-width: 640px) 17rem, 15rem"
-                  claseLibro="motion-safe:animate-[flotar_7s_ease-in-out_infinite]"
-                />
-              </Link>
+              {/* El libro sigue al cursor: es el único de la home que lo hace, y
+                  es el que tiene que detener el pulgar de quien llega de un vídeo. */}
+              <LibroInteractivo intensidad={16}>
+                <Link href={`/libro/${libro.slug}`} tabIndex={-1} aria-hidden="true">
+                  <PortadaLibro
+                    libro={aTarjeta(libro)}
+                    decorativa
+                    prioridad
+                    grosor={40}
+                    giro={16}
+                    sizes="(min-width: 1024px) 20rem, (min-width: 640px) 17rem, 15rem"
+                    claseEnvoltorio="motion-safe:animate-[flotar_7s_ease-in-out_infinite]"
+                  />
+                </Link>
+              </LibroInteractivo>
             </div>
 
             <div className="text-center">
