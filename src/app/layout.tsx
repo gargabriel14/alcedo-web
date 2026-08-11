@@ -109,6 +109,14 @@ export default function LayoutRaiz({ children }: { children: React.ReactNode }) 
       className={`${fraunces.variable} ${archivo.variable} h-full antialiased`}
     >
       <head>
+        {/*
+          Le dice a Dark Reader que no toque nada: el sitio ya trae su propio modo
+          oscuro, con los contrastes calculados uno a uno. La extensión invertía
+          por segunda vez lo que ya estaba invertido y, de paso, metía atributos en
+          el HTML antes de que React hidratara, lo que provocaba avisos de
+          discrepancia en desarrollo.
+        */}
+        <meta name="darkreader-lock" />
         <ScriptTema />
       </head>
       <body className="flex min-h-full flex-col">
