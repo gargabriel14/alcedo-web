@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import { Archivo, Fraunces } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import dynamic from "next/dynamic";
 import { Cabecera } from "@/components/layout/Cabecera";
@@ -31,14 +31,18 @@ const fraunces = Fraunces({
 });
 
 /**
- * Las dos van con `display: swap`.
+ * Archivo para el texto, no Inter.
  *
- * Se probó `optional` en Inter con la idea de que el repintado al llegar la fuente
- * estuviera empujando el LCP. La medición dijo que no: mismo LCP con las dos
- * opciones. Como no compraba nada, se vuelve a `swap`, que es lo que garantiza que
- * el lector acabe viendo siempre la tipografía de la marca.
+ * Inter está diseñada para interfaces y en un sitio editorial se lee como
+ * «aplicación». Archivo viene del rótulo y la prensa: tiene el asta más recta y
+ * las versalitas con más carácter, que es lo que hace que un antetítulo en
+ * mayúsculas no parezca un botón. Sigue siendo una grotesca muy legible y sigue
+ * viniendo autoalojada por `next/font`.
+ *
+ * Las dos con `display: swap`: se probó `optional` para ver si el repintado al
+ * llegar la fuente empujaba el LCP, y la medición dijo que no cambiaba nada.
  */
-const inter = Inter({
+const archivo = Archivo({
   subsets: ["latin"],
   display: "swap",
   variable: "--fuente-texto",
@@ -102,7 +106,7 @@ export default function LayoutRaiz({ children }: { children: React.ReactNode }) 
       // el idioma del documento se resuelve con el resto de la configuración.
       lang={SITIO.idioma.split("-")[0]}
       suppressHydrationWarning
-      className={`${fraunces.variable} ${inter.variable} h-full antialiased`}
+      className={`${fraunces.variable} ${archivo.variable} h-full antialiased`}
     >
       <head>
         <ScriptTema />

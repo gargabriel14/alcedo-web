@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Contenedor } from "@/components/ui/Contenedor";
+import { Revelar } from "@/components/ui/Revelar";
 import { TituloSeccion } from "@/components/ui/TituloSeccion";
 import { DIAS_GARANTIA, MESES_ACTUALIZACION } from "@/lib/garantia";
 
@@ -40,38 +41,45 @@ export function CompromisoAlcedo() {
   return (
     <section
       aria-labelledby="titulo-compromiso"
-      className="border-t border-borde bg-fondo-alterno py-16 sm:py-20"
+      className="bg-tinta py-20 text-hueso sm:py-28"
     >
       <Contenedor>
         <TituloSeccion
           id="titulo-compromiso"
           ojo="Compromiso Alcedo"
-          titulo="Lo que puedes esperar de nosotros"
+          titulo={
+            <>
+              Lo que puedes <em>esperar</em> de nosotros
+            </>
+          }
           entrada="Somos una editorial pequeña. Nuestra única ventaja es que respondemos de lo que publicamos."
+          oscuro
         />
 
-        <ol className="mt-10 grid gap-x-8 gap-y-8 sm:grid-cols-2">
+        <ol className="mt-14 grid gap-x-12 gap-y-10 sm:grid-cols-2">
           {COMPROMISOS.map((compromiso, indice) => (
-            <li key={compromiso.titulo} className="flex gap-4">
-              <span
-                aria-hidden="true"
-                className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-full border border-marca/40 bg-marca-suave font-titulares text-base font-semibold text-marca-texto"
-              >
-                {indice + 1}
-              </span>
-              <div>
-                <h3 className="text-lg leading-snug">{compromiso.titulo}</h3>
-                <p className="mt-1.5 text-[0.9375rem] leading-relaxed text-texto-tenue">
+            <li key={compromiso.titulo}>
+              <Revelar retraso={indice * 70} className="border-t border-hueso/20 pt-6">
+                <p
+                  aria-hidden="true"
+                  className="text-[0.65rem] font-semibold tracking-[0.24em] text-marca uppercase"
+                >
+                  {String(indice + 1).padStart(2, "0")}
+                </p>
+                <h3 className="mt-3 font-titulares text-xl leading-snug text-hueso">
+                  {compromiso.titulo}
+                </h3>
+                <p className="mt-2.5 text-[0.9375rem] leading-relaxed text-hueso/60">
                   {compromiso.texto}
                 </p>
-              </div>
+              </Revelar>
             </li>
           ))}
         </ol>
 
-        <p className="mt-10 text-sm text-texto-tenue">
+        <p className="mt-14 text-sm text-hueso/50">
           Las condiciones completas, en{" "}
-          <Link href="/legal/terminos" className="underline hover:text-marca-texto">
+          <Link href="/legal/terminos" className="underline hover:text-marca">
             términos de compra
           </Link>
           . Los precios de la web se muestran con impuestos incluidos.

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
@@ -11,23 +10,34 @@ interface PropsLogo {
 }
 
 /**
- * Isotipo + nombre. El isotipo vive en `public/logo.svg`: el día que llegue el
- * logo definitivo se sustituye ese fichero y aquí no se toca nada.
+ * Isotipo + nombre.
  *
- * `unoptimized` porque un SVG de 500 bytes no necesita pasar por el optimizador
- * de imágenes (que además rechaza SVG por seguridad).
+ * El isotipo se pinta como **máscara CSS** de `public/logo.svg`, no como imagen.
+ * Así el martín pescador toma el color del texto: tinta sobre hueso en claro,
+ * hueso sobre tinta en oscuro, y en el pie sobre fondo oscuro sin tener que
+ * mantener tres versiones del fichero. Cambiar el logo sigue siendo sustituir un
+ * SVG y nada más.
  */
-export function Logo({ comoEnlace = false, soloIsotipoEnMovil = false, className }: PropsLogo) {
+export function Logo({
+  comoEnlace = false,
+  soloIsotipoEnMovil = false,
+  className,
+}: PropsLogo) {
   const contenido = (
-    <span className={cn("inline-flex items-center gap-2.5", className)}>
-      <Image
-        src="/logo.svg"
-        alt=""
-        width={34}
-        height={34}
-        unoptimized
-        priority
-        className="size-[30px] shrink-0 sm:size-[34px]"
+    <span className={cn("inline-flex items-center gap-3", className)}>
+      <span
+        aria-hidden="true"
+        className="size-9 shrink-0 bg-current sm:size-10"
+        style={{
+          maskImage: "url(/logo.svg)",
+          maskSize: "contain",
+          maskRepeat: "no-repeat",
+          maskPosition: "center",
+          WebkitMaskImage: "url(/logo.svg)",
+          WebkitMaskSize: "contain",
+          WebkitMaskRepeat: "no-repeat",
+          WebkitMaskPosition: "center",
+        }}
       />
       <span
         className={cn(
@@ -35,10 +45,10 @@ export function Logo({ comoEnlace = false, soloIsotipoEnMovil = false, className
           soloIsotipoEnMovil && "hidden sm:flex",
         )}
       >
-        <span className="text-[0.5625rem] font-semibold uppercase tracking-[0.22em] text-texto-tenue">
+        <span className="text-[0.5625rem] font-semibold tracking-[0.34em] text-texto-tenue uppercase">
           Editorial
         </span>
-        <span className="font-titulares text-xl font-semibold tracking-tight text-texto sm:text-[1.375rem]">
+        <span className="mt-1 font-titulares text-[1.375rem] font-semibold tracking-tight">
           Alcedo
         </span>
       </span>
@@ -46,11 +56,10 @@ export function Logo({ comoEnlace = false, soloIsotipoEnMovil = false, className
   );
 
   if (comoEnlace) {
-    // Sin `aria-label`: el nombre accesible sale del propio texto visible. Poner
-    // una etiqueta distinta de lo que se lee en pantalla rompe a quien navega por
-    // voz («pulsa Editorial Alcedo» tiene que funcionar) y Lighthouse lo marca.
+    // Sin `aria-label`: el nombre accesible sale del texto visible, que es lo que
+    // permite decir «pulsa Editorial Alcedo» a quien navega por voz.
     return (
-      <Link href="/" className="rounded-sm">
+      <Link href="/" className="rounded-sm text-texto">
         {contenido}
       </Link>
     );

@@ -26,7 +26,7 @@ export default async function ImagenOgLibro({
         <PlantillaOg
           ojo="Editorial Alcedo"
           titulo="Conocimiento con puntería"
-          color="#0E7C9B"
+          color="#235C62"
         />
       ),
       size,

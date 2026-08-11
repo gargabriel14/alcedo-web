@@ -2,15 +2,25 @@ import Link from "next/link";
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-export type VarianteBoton = "primario" | "secundario" | "fantasma";
+export type VarianteBoton = "primario" | "secundario" | "fantasma" | "claro";
 export type TamanoBoton = "sm" | "md" | "lg";
 
+/**
+ * Botón de píldora con microetiqueta en versalitas.
+ *
+ * El relleno se invierte al pasar por encima —lleno a contorno— en vez de
+ * limitarse a oscurecerse. Es el gesto que separa un botón editorial de un botón
+ * de aplicación, y no cuesta ni un byte de JavaScript.
+ */
 const VARIANTES: Record<VarianteBoton, string> = {
   primario:
-    "bg-marca text-marca-contraste hover:bg-marca-hover shadow-sm hover:shadow-md active:translate-y-px",
+    "border-marca bg-marca text-marca-contraste hover:bg-transparent hover:text-marca-texto",
   secundario:
-    "border border-borde-fuerte bg-superficie text-texto hover:border-marca hover:text-marca-texto",
-  fantasma: "text-marca-texto hover:bg-marca-suave",
+    "border-borde-fuerte bg-transparent text-texto hover:border-marca hover:bg-marca hover:text-marca-contraste",
+  fantasma: "border-transparent bg-transparent text-marca-texto hover:bg-marca-suave",
+  /* Para las secciones oscuras: contorno claro que se rellena de hueso. */
+  claro:
+    "border-hueso/45 bg-transparent text-hueso hover:border-hueso hover:bg-hueso hover:text-tinta",
 };
 
 /**
@@ -18,13 +28,13 @@ const VARIANTES: Record<VarianteBoton, string> = {
  * aquí tres de cada cuatro visitas llegan desde el móvil.
  */
 const TAMANOS: Record<TamanoBoton, string> = {
-  sm: "h-9 gap-1.5 px-3 text-sm",
-  md: "h-11 gap-2 px-5 text-[0.9375rem]",
-  lg: "h-13 gap-2.5 px-7 text-base sm:text-lg",
+  sm: "h-9 gap-2 px-4 text-[0.625rem]",
+  md: "h-11 gap-2.5 px-6 text-[0.6875rem]",
+  lg: "h-13 gap-3 px-8 text-[0.75rem]",
 };
 
 const BASE =
-  "inline-flex items-center justify-center rounded-md font-medium leading-none transition-[color,background-color,border-color,box-shadow,translate] duration-150 disabled:pointer-events-none disabled:opacity-55";
+  "group/boton inline-flex items-center justify-center rounded-full border font-semibold tracking-[0.18em] uppercase leading-none transition-[color,background-color,border-color,transform] duration-300 active:translate-y-px disabled:pointer-events-none disabled:opacity-55";
 
 export function clasesBoton(
   variante: VarianteBoton = "primario",
@@ -34,12 +44,26 @@ export function clasesBoton(
   return cn(BASE, VARIANTES[variante], TAMANOS[tamano], className);
 }
 
+/** Flecha que avanza al pasar por encima. Decorativa: el texto ya dice la acción. */
+function Flecha() {
+  return (
+    <span
+      aria-hidden="true"
+      className="transition-transform duration-300 group-hover/boton:translate-x-1"
+    >
+      →
+    </span>
+  );
+}
+
 interface PropsComunes {
   children: ReactNode;
   variante?: VarianteBoton;
   tamano?: TamanoBoton;
   /** Ocupa todo el ancho disponible. Casi siempre lo que quieres en móvil. */
   completo?: boolean;
+  /** Añade la flecha de avance. Para la acción principal de cada bloque. */
+  conFlecha?: boolean;
   className?: string;
 }
 
@@ -50,6 +74,7 @@ export function Boton({
   variante,
   tamano,
   completo,
+  conFlecha,
   className,
   type = "button",
   ...resto
@@ -61,6 +86,7 @@ export function Boton({
       {...resto}
     >
       {children}
+      {conFlecha ? <Flecha /> : null}
     </button>
   );
 }
@@ -77,30 +103,31 @@ export function EnlaceBoton({
   variante,
   tamano,
   completo,
+  conFlecha,
   className,
   href,
   externo,
   ...resto
 }: PropsEnlace) {
   const clases = clasesBoton(variante, tamano, cn(completo && "w-full", className));
+  const contenido = (
+    <>
+      {children}
+      {conFlecha ? <Flecha /> : null}
+    </>
+  );
 
   if (externo) {
     return (
-      <a
-        href={href}
-        className={clases}
-        target="_blank"
-        rel="noopener noreferrer"
-        {...resto}
-      >
-        {children}
+      <a href={href} className={clases} target="_blank" rel="noopener noreferrer" {...resto}>
+        {contenido}
       </a>
     );
   }
 
   return (
     <Link href={href} className={clases} {...resto}>
-      {children}
+      {contenido}
     </Link>
   );
 }

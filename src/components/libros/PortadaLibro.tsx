@@ -14,98 +14,134 @@ interface PropsPortadaLibro {
    * que el lector de pantalla lea dos veces lo mismo.
    */
   decorativa?: boolean;
+  /** Grosor del lomo en píxeles. Súbelo en las portadas grandes. */
+  grosor?: number;
+  /** Giro en grados sobre el eje vertical. 0 = de frente. */
+  giro?: number;
+  /** Clases para el bloque del libro (por ejemplo, giro al pasar el cursor). */
+  claseLibro?: string;
   className?: string;
 }
 
 /**
- * Portada del libro.
+ * El libro, en volumen.
  *
- * Si el frontmatter trae `portada`, se sirve por `next/image` en AVIF. Si todavía
- * no hay imagen, se dibuja una portada tipográfica con los datos reales del
- * libro: cero bytes de imagen, cero CLS, y nadie se confunde pensando que es la
- * portada definitiva. El texto escala con el contenedor (`cqw`), así que la misma
- * portada funciona a 120 px en una tarjeta y a 420 px en el hero.
+ * Cuatro caras con transformaciones 3D de CSS —portada, lomo, canto y
+ * contracubierta— en vez de una imagen plana. No entra ni WebGL ni una librería:
+ * son cuatro planos rotados, y el navegador los compone en la GPU.
+ *
+ * No es adorno. Alcedo vende un PDF de 29 € frente a un Kindle de 5,99 €, y la
+ * objeción silenciosa del comprador es «esto no es un libro de verdad». Un objeto
+ * con lomo, canto y grosor contesta a esa objeción antes de que se formule.
+ *
+ * Si el frontmatter trae `portada`, la cubierta se sirve por `next/image` en
+ * AVIF. Si todavía no la hay, se compone una portada tipográfica con los datos
+ * reales del libro: cero bytes de imagen, cero CLS, y nadie la confunde con la
+ * definitiva.
  */
 export function PortadaLibro({
   libro,
   sizes,
   prioridad = false,
   decorativa = false,
+  grosor = 26,
+  giro = 0,
+  claseLibro,
   className,
 }: PropsPortadaLibro) {
   const sello = obtenerSello(libro.sello);
   const descripcion =
     libro.portada?.alt ?? `Portada de ${libro.titulo}, de ${libro.autorNombre}`;
 
-  const marco = cn(
-    "relative aspect-[2/3] w-full overflow-hidden rounded-sm rounded-r-md bg-white shadow-tarjeta ring-1 ring-black/10",
-    className,
-  );
-
-  if (libro.portada) {
-    return (
-      <div className={marco}>
-        <Image
-          src={libro.portada.src}
-          alt={decorativa ? "" : descripcion}
-          fill
-          sizes={sizes}
-          priority={prioridad}
-          className="object-cover"
-        />
-        <SombraLomo />
-      </div>
-    );
-  }
-
   return (
-    <div
-      className={cn(marco, "@container")}
-      role={decorativa ? "presentation" : "img"}
-      aria-label={decorativa ? undefined : descripcion}
-      aria-hidden={decorativa ? true : undefined}
-    >
+    <div className={cn("escena-libro relative", className)}>
       <div
-        aria-hidden="true"
-        className="absolute inset-x-0 top-0 h-[6.5%]"
-        style={{ backgroundColor: sello.hex }}
-      />
+        className={cn("libro-3d", claseLibro)}
+        style={
+          {
+            "--grosor": `${grosor}px`,
+            "--color-libro": sello.hex,
+            transform: giro ? `rotateY(${giro}deg)` : undefined,
+          } as React.CSSProperties
+        }
+        role={decorativa ? "presentation" : "img"}
+        aria-label={decorativa ? undefined : descripcion}
+        aria-hidden={decorativa ? true : undefined}
+      >
+        <span className="cara-libro cara-contra" aria-hidden="true" />
+        <span className="cara-libro cara-canto" aria-hidden="true" />
 
-      <div className="flex h-full flex-col justify-between pt-[15%] pr-[9%] pb-[9%] pl-[11%]">
-        <div>
-          <p
-            className="text-[2.6cqw] font-semibold tracking-[0.16em] uppercase"
-            style={{ color: sello.hex }}
-          >
-            {sello.nombre}
-          </p>
-          <p className="mt-[7%] font-titulares text-[10cqw] leading-[1.05] font-semibold tracking-tight text-tinta">
-            {libro.titulo}
-          </p>
-          <p className="mt-[5%] text-[3.6cqw] leading-snug text-tinta/65">
-            {libro.subtitulo}
-          </p>
-        </div>
+        <span className="cara-libro cara-lomo" aria-hidden="true">
+          <span>
+            {libro.titulo} · {libro.autorNombre}
+          </span>
+        </span>
 
-        <div>
-          <span aria-hidden="true" className="block h-px w-[18%] bg-tinta/30" />
-          <p className="mt-[4%] text-[3.1cqw] font-semibold tracking-[0.1em] text-tinta/85 uppercase">
-            {libro.autorNombre}
-          </p>
+        <div className="cara-libro cara-portada @container">
+          {libro.portada ? (
+            <Image
+              src={libro.portada.src}
+              alt=""
+              fill
+              sizes={sizes}
+              priority={prioridad}
+              className="object-cover"
+            />
+          ) : (
+            <PortadaTipografica libro={libro} colorSello={sello.hex} nombreSello={sello.nombre} />
+          )}
         </div>
       </div>
 
-      <SombraLomo />
+      <span className="sombra-libro" aria-hidden="true" />
     </div>
   );
 }
 
-/** Filete oscuro en el canto izquierdo: hace que el rectángulo lea como libro. */
-function SombraLomo() {
+/**
+ * Cubierta provisional compuesta con tipografía.
+ *
+ * El texto escala con el contenedor (`cqw`), así que la misma cubierta funciona a
+ * 120 px en una tarjeta y a 420 px en el hero sin ajustar nada.
+ */
+function PortadaTipografica({
+  libro,
+  colorSello,
+  nombreSello,
+}: {
+  libro: LibroTarjeta;
+  colorSello: string;
+  nombreSello: string;
+}) {
   return (
-    <span
-      aria-hidden="true"
-      className="pointer-events-none absolute inset-y-0 left-0 w-[5%] bg-gradient-to-r from-black/18 via-black/6 to-transparent"
-    />
+    <div className="flex h-full flex-col justify-between bg-white pt-[15%] pr-[9%] pb-[9%] pl-[11%]">
+      <span
+        aria-hidden="true"
+        className="absolute inset-x-0 top-0 h-[6.5%]"
+        style={{ backgroundColor: colorSello }}
+      />
+
+      <div>
+        <p
+          className="text-[2.6cqw] font-semibold tracking-[0.16em] uppercase"
+          style={{ color: colorSello }}
+        >
+          {nombreSello}
+        </p>
+        <p className="mt-[7%] font-titulares text-[10cqw] leading-[1.05] font-semibold tracking-tight text-tinta">
+          {libro.titulo}
+        </p>
+        <p className="mt-[5%] text-[3.6cqw] leading-snug text-tinta/65">
+          {libro.subtitulo}
+        </p>
+      </div>
+
+      <div>
+        <span aria-hidden="true" className="block h-px w-[18%] bg-tinta/30" />
+        <p className="mt-[4%] text-[3.1cqw] font-semibold tracking-[0.1em] text-tinta/85 uppercase">
+          {libro.autorNombre}
+        </p>
+      </div>
+    </div>
   );
 }

@@ -1,5 +1,44 @@
 # PLAN — alcedo.com
 
+## FASE 5 — Rediseño con la identidad definitiva · _en curso_
+
+### De dónde sale
+
+El fundador aporta el **logo definitivo** (martín pescador en verde azulado sobre
+hueso) y una **referencia de dirección de arte**: una maqueta de editorial premium
+con libro 3D en CSS, antetítulos con filete, titulares serif con cursiva de acento,
+secciones oscuras, ticker, manifiesto y formularios de línea baja.
+
+### Qué se toma y qué no
+
+| Se toma | Por qué |
+| --- | --- |
+| Libro 3D en CSS (portada, lomo, canto, contracubierta) | Da volumen de objeto sin WebGL ni una sola librería. Vende el libro como cosa física, que es lo que diferencia a Alcedo de una tienda de infoproductos. |
+| Antetítulo con filete, titular grande con cursiva de acento | Es la jerarquía que hace que un sitio parezca editorial y no plantilla. |
+| Sección oscura, manifiesto y ticker | Cortan el ritmo de la página y dan sitio a la voz de la marca. |
+| Formularios de línea baja | Menos caja, más papel. Y menos peso visual en el móvil. |
+| Reveals al hacer scroll | Con `IntersectionObserver`, una vez por elemento y anulados con `prefers-reduced-motion`. |
+
+| **No** se toma | Por qué |
+| --- | --- |
+| Su paleta terracota y latón | Alcedo ya tiene tres sellos con color propio. Meter un cuarto acento rompería el sistema. |
+| Su tipografía de texto (Archivo) sustituyendo a Inter | Se adopta: Archivo tiene más carácter editorial que Inter y sigue siendo self-hosted por `next/font`. |
+| Efecto imán en los botones | Sigue al cursor con `pointermove`. En un sitio donde el 75 % del tráfico es táctil, es JavaScript que no ve casi nadie. |
+| Todo en un solo fichero | La referencia es una demo. Aquí el contenido vive en `/content` y el sistema en componentes. |
+
+### Decisión de marca
+
+El logo es de un **verde azulado oscuro**, distinto del `#0E7C9B` que fijaba el
+brief como color de marca. Se hace primario el color del logo y `#0E7C9B` se queda
+como color del sello Práctico, que es donde el brief lo necesita. Una marca cuyo
+logo y cuya web no comparten color arranca ya descosida.
+
+### Pendiente del fundador
+
+`public/logo.svg` es una **reconstrucción**: hay que sustituirlo por el fichero
+original. El componente lo consume por máscara CSS, así que el color se adapta solo
+al tema claro y oscuro y no hay que tocar código.
+
 Documento de trabajo. Al empezar cada fase se escribe aquí qué se va a hacer y por qué;
 al terminarla, qué cambió y qué falta.
 

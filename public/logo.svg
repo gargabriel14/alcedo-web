@@ -1,20 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  PLACEHOLDER — isotipo provisional de Editorial Alcedo.
-  Sustituir por el logo definitivo manteniendo el nombre del fichero
-  (`public/logo.svg`) y un lienzo cuadrado: el componente <Logo /> lo consume
-  a 40x40 y no hay que tocar código para cambiarlo.
-  Usa colores de marca fijos a propósito, para que funcione igual sobre el
-  fondo hueso y sobre el fondo oscuro.
+  Isotipo de Editorial Alcedo: martín pescador con las alas abiertas sobre una
+  plumilla.
+
+  ⚠️ RECONSTRUCCIÓN. Está dibujado a partir del logo que aportó el fundador, pero
+  no es el fichero original: sustitúyelo por el definitivo manteniendo el nombre y
+  el lienzo cuadrado.
+
+  Va en un solo color y sin fondo a propósito: el componente <Logo /> lo usa como
+  máscara CSS, así que toma el color del tema (tinta sobre hueso, hueso sobre
+  tinta) sin necesidad de mantener dos versiones.
+
+  El ojo es un hueco recortado con `fill-rule="evenodd"`, no un círculo pintado:
+  así se ve el fondo a través de él y funciona igual sobre cualquier color.
 -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
-  <path
-    d="M24 2c7.7 4.6 12 12.2 12 20.6C36 32.7 31.2 41.4 24 46c-7.2-4.6-12-13.3-12-23.4C12 14.2 16.3 6.6 24 2Z"
-    fill="#0E7C9B"
-  />
-  <path
-    d="M24 46c-4.2-2.7-7.4-7-9.3-12 2.8 2.1 5.9 3.2 9.3 3.2 3.4 0 6.5-1.1 9.3-3.2-1.9 5-5.1 9.3-9.3 12Z"
-    fill="#C4642A"
-  />
-  <path d="M24 3.5v41" stroke="#FAF8F3" stroke-width="2" stroke-linecap="round" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor">
+  <!-- Ala izquierda: borde superior y barrido inferior -->
+  <path d="M58 216c64-17 128-13 187 13 21 9 40 21 57 36l-1 41c-32-28-68-48-107-59-45-13-90-15-134-7l-14-4 12-20Z" />
+  <path d="M58 216c59 40 110 90 151 149 16 23 30 47 42 72l-6 20c-25-42-54-80-87-115-34-35-72-66-113-92l13-34Z" />
+
+  <!-- Ala derecha: borde superior y barrido inferior -->
+  <path d="M456 238c-64-15-129-9-189 19-23 11-44 25-63 42l2 40c34-30 73-53 115-66 43-14 88-17 132-10l14-5-11-20Z" />
+  <path d="M456 238c-61 37-115 84-159 140-18 23-34 47-47 72l5 20c27-41 58-77 93-109 35-33 74-61 116-86l-8-37Z" />
+
+  <!-- Cabeza y pico, con el ojo recortado -->
+  <path fill-rule="evenodd" d="M302 120c36-9 71 2 92 28l82 22-82 22c-5 21-21 38-44 46-40 14-83-6-95-44-12-37 11-67 47-74Zm20 32a12 12 0 1 0 0 24 12 12 0 0 0 0-24Z" />
+
+  <!-- Plumilla: cuerpo recto que termina en punta -->
+  <path d="M242 252h20v208l-10 46-10-46V252Z" />
 </svg>

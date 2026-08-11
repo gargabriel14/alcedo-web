@@ -15,7 +15,7 @@ export default function ImagenOgSitio() {
         titulo={SITIO.claim}
         subtitulo={SITIO.propuesta}
         pie="alcedo · no-ficción práctica ilustrada"
-        color="#0E7C9B"
+        color="#235C62"
       />
     ),
     size,

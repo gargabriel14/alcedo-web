@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Favicon: el isotipo simplificado para que se lea a 16 px. -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
-  <rect width="48" height="48" rx="9" fill="#0E7C9B" />
-  <path
-    d="M24 8c5.6 3.4 8.8 8.9 8.8 15.1C32.8 30.5 29.3 37 24 41c-5.3-4-8.8-10.5-8.8-17.9C15.2 16.9 18.4 11.4 24 8Z"
-    fill="#FAF8F3"
-  />
-  <path
-    d="M24 41c-3-2.3-5.4-5.4-6.8-9 2 1.5 4.3 2.3 6.8 2.3s4.8-.8 6.8-2.3c-1.4 3.6-3.8 6.7-6.8 9Z"
-    fill="#C4642A"
-  />
+<!--
+  Favicon: el isotipo en hueso sobre el verde de marca.
+
+  Va sobre fondo pleno y no en contorno porque a 16 px un dibujo en línea se
+  convierte en una mancha gris: la silueta llena es lo único que se distingue en
+  una pestaña.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#235C62" />
+  <g fill="#FAF8F3" transform="translate(58 52) scale(0.77)">
+    <path d="M58 216c64-17 128-13 187 13 21 9 40 21 57 36l-1 41c-32-28-68-48-107-59-45-13-90-15-134-7l-14-4 12-20Z" />
+    <path d="M58 216c59 40 110 90 151 149 16 23 30 47 42 72l-6 20c-25-42-54-80-87-115-34-35-72-66-113-92l13-34Z" />
+    <path d="M456 238c-64-15-129-9-189 19-23 11-44 25-63 42l2 40c34-30 73-53 115-66 43-14 88-17 132-10l14-5-11-20Z" />
+    <path d="M456 238c-61 37-115 84-159 140-18 23-34 47-47 72l5 20c27-41 58-77 93-109 35-33 74-61 116-86l-8-37Z" />
+    <path fill-rule="evenodd" d="M302 120c36-9 71 2 92 28l82 22-82 22c-5 21-21 38-44 46-40 14-83-6-95-44-12-37 11-67 47-74Zm20 32a12 12 0 1 0 0 24 12 12 0 0 0 0-24Z" />
+    <path d="M242 252h20v208l-10 46-10-46V252Z" />
+  </g>
 </svg>

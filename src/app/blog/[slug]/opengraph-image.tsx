@@ -25,7 +25,7 @@ export default async function ImagenOgArticulo({
         <PlantillaOg
           ojo="Blog"
           titulo="Conocimiento con puntería"
-          color="#0E7C9B"
+          color="#235C62"
         />
       ),
       size,

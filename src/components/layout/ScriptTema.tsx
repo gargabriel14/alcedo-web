@@ -11,11 +11,13 @@ export const CLAVE_TEMA = "alcedo-tema";
  * El tema no es un dato crítico, así que `localStorage` es el sitio correcto:
  * si falla o está bloqueado, se cae con elegancia a `prefers-color-scheme`.
  */
-const CODIGO = `(function(){try{
+const CODIGO = `(function(){var r=document.documentElement;
+r.classList.add('js');
+try{
 var g=localStorage.getItem('${CLAVE_TEMA}');
 var s=window.matchMedia('(prefers-color-scheme: dark)').matches;
 var o=g==='oscuro'||(g!=='claro'&&s);
-document.documentElement.classList.toggle('oscuro',o);
+r.classList.toggle('oscuro',o);
 }catch(e){}})();`;
 
 export function ScriptTema() {

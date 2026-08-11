@@ -56,11 +56,13 @@
   --borde: #e3dccd;
   --borde-fuerte: #cdc3b0;
 
-  --marca: #0e7c9b;
-  --marca-texto: #0a6480;
-  --marca-hover: #0a6480;
-  --marca-contraste: #ffffff;
-  --marca-suave: #e4f1f6;
+  /* Color del logo. Contraste 7,1:1 sobre el fondo hueso: vale para texto
+     pequeño, para enlaces y como fondo de botón con texto claro. */
+  --marca: #235c62;
+  --marca-texto: #1c4b50;
+  --marca-hover: #163c40;
+  --marca-contraste: #faf8f3;
+  --marca-suave: #e2ecec;
 
   --sello-practico: #0e7c9b;
   --sello-practico-texto: #0a6480;
@@ -93,11 +95,11 @@
   --borde: #302d28;
   --borde-fuerte: #4a453d;
 
-  --marca: #5fbbd6;
-  --marca-texto: #7fcbe0;
-  --marca-hover: #8fd4e6;
-  --marca-contraste: #0b1418;
-  --marca-suave: #12313c;
+  --marca: #6db3b8;
+  --marca-texto: #8ac6ca;
+  --marca-hover: #a3d4d7;
+  --marca-contraste: #0e1a1b;
+  --marca-suave: #16302f;
 
   --sello-practico: #5fbbd6;
   --sello-practico-texto: #7fcbe0;
@@ -263,15 +265,19 @@
 }
 
 /**
- * Flotar: para libros y elementos que "levitan" sutilmente.
- * Duración larga para que sea casi imperceptible.
+ * Flotar: para libros y elementos que «levitan» sutilmente.
+ *
+ * Había dos definiciones de este keyframe, una por rama. Se queda el recorrido de
+ * 13 px, que es el que usa el libro del hero: con 8 px el movimiento no se leía a
+ * tamaño grande. Un solo `translate`, compuesto en la GPU.
  */
 @keyframes flotar {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-8px);
+    transform: translateY(-13px);
   }
 }
 
@@ -467,13 +473,173 @@
    6. Utilidades propias
 --------------------------------------------------------------------------- */
 @utility ojo-titular {
-  /* Antetítulo en versalitas: marca la jerarquía sin gastar un tamaño grande. */
+  /* Antetítulo en versalitas con filete: marca la jerarquía sin gastar un tamaño
+     grande y da el aire de revista que pide la dirección de arte. */
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
   font-family: var(--font-texto);
-  font-size: 0.75rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--texto-tenue);
+
+  &::before {
+    content: "";
+    width: 2.125rem;
+    height: 1px;
+    flex: none;
+    background-color: var(--marca);
+  }
+}
+
+@utility ojo-centrado {
+  justify-content: center;
+}
+
+/* ---------------------------------------------------------------------------
+   Libro en 3D
+   Cuatro caras con transformaciones 3D de CSS: portada, contracubierta, lomo y
+   canto. Sin WebGL, sin librería y sin una sola imagen extra: el volumen sale de
+   rotar cuatro planos. Es lo que hace que un PDF de 29 € se lea como un objeto y
+   no como un archivo.
+--------------------------------------------------------------------------- */
+.escena-libro {
+  perspective: 1400px;
+}
+
+.libro-3d {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  width: 100%;
+  transform-style: preserve-3d;
+  /* Grosor del lomo. Se sube en las portadas grandes. */
+  --grosor: 26px;
+  transition: transform 0.9s var(--suave, cubic-bezier(0.22, 0.61, 0.21, 1));
+}
+
+.cara-libro {
+  position: absolute;
+  inset: 0;
+  border-radius: 2px 5px 5px 2px;
+  backface-visibility: hidden;
+}
+
+.cara-portada {
+  transform: translateZ(calc(var(--grosor) / 2));
+  overflow: hidden;
+  background-color: #fff;
+  /* Sombra interior junto al lomo: es lo que da la sensación de canto. */
+  box-shadow: inset -14px 0 24px -14px rgb(20 14 8 / 0.35);
+}
+
+.cara-contra {
+  transform: rotateY(180deg) translateZ(calc(var(--grosor) / 2));
+  background-color: var(--color-libro, #235c62);
+  filter: brightness(0.72);
+}
+
+.cara-lomo {
+  top: 0;
+  left: calc(var(--grosor) / -2);
+  height: 100%;
+  width: var(--grosor);
+  transform: rotateY(-90deg);
+  border-radius: 0;
+  background-color: var(--color-libro, #235c62);
+  filter: brightness(0.82);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cara-lomo span {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  max-height: 92%;
+  overflow: hidden;
+  white-space: nowrap;
+  font-family: var(--font-texto);
+  font-size: 0.58rem;
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--texto-tenue);
+  color: rgb(250 248 243 / 0.92);
+}
+
+.cara-canto {
+  top: 0;
+  left: calc(100% - var(--grosor) / 2);
+  height: 100%;
+  width: var(--grosor);
+  transform: rotateY(90deg);
+  border-radius: 0;
+  /* Las páginas: rayas finas que imitan el bloque de papel. */
+  background: repeating-linear-gradient(90deg, #f6f0e2 0 2px, #e2d9c2 2px 3px);
+}
+
+/* Sombra proyectada bajo el libro. Se estira al girar. */
+.sombra-libro {
+  position: absolute;
+  right: 6%;
+  bottom: -1rem;
+  left: 6%;
+  height: 1.5rem;
+  background: radial-gradient(50% 50% at 50% 50%, rgb(23 19 16 / 0.26), transparent 72%);
+  filter: blur(7px);
+  transition: transform 0.9s var(--suave, cubic-bezier(0.22, 0.61, 0.21, 1));
+}
+
+/* ---------------------------------------------------------------------------
+   Cinta de titulares
+--------------------------------------------------------------------------- */
+@keyframes desfilar {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.cinta-pista {
+  display: flex;
+  width: max-content;
+  animation: desfilar 46s linear infinite;
+}
+
+.cinta:hover .cinta-pista {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cinta-pista {
+    animation: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Aparición al hacer scroll
+   El estado inicial solo se aplica si JavaScript ha marcado el documento: sin
+   JS, el contenido se ve desde el principio en vez de quedarse invisible.
+--------------------------------------------------------------------------- */
+.js .revelar {
+  opacity: 0;
+  transform: translateY(1.5rem);
+  transition:
+    opacity 0.9s var(--suave, cubic-bezier(0.22, 0.61, 0.21, 1)),
+    transform 0.9s var(--suave, cubic-bezier(0.22, 0.61, 0.21, 1));
+}
+
+.js .revelar[data-visible="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .revelar {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 @utility salta-al-contenido {
