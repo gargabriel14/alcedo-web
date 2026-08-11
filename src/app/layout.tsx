@@ -3,6 +3,7 @@ import { Archivo, Fraunces } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import dynamic from "next/dynamic";
 import { Cabecera } from "@/components/layout/Cabecera";
+import { ObservadorRevelar } from "@/components/layout/ObservadorRevelar";
 import { PieDePagina } from "@/components/layout/PieDePagina";
 import { ScriptTema } from "@/components/layout/ScriptTema";
 import { DatosEstructurados } from "@/components/seo/DatosEstructurados";
@@ -132,6 +133,7 @@ export default function LayoutRaiz({ children }: { children: React.ReactNode }) 
 
         <PieDePagina />
 
+        <ObservadorRevelar />
         <AvisoCookies />
 
         <DatosEstructurados

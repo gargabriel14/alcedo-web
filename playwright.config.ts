@@ -23,6 +23,16 @@ export default defineConfig({
     trace: "on-first-retry",
   },
 
+  /**
+   * 10 s en vez de los 5 por defecto.
+   *
+   * Las rutas dinámicas de la tienda (`/comprar`, `/checkout/exito`) tardan más
+   * la primera vez que se piden tras un build, y con el servidor recién
+   * arrancado los dos tests de compra fallaban por eso y no por un error real.
+   * Un margen mayor no tapa fallos: si algo se rompe de verdad, sigue fallando.
+   */
+  expect: { timeout: 10_000 },
+
   projects: [
     {
       name: "movil",
