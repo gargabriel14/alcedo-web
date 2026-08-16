@@ -1,5 +1,74 @@
 # PLAN — alcedo.com
 
+## FASE 6 — Escalado · _epic 01 hecho, 02 a 05 diseñados_
+
+### El encargo y la objeción
+
+El fundador pide escalar en cuatro frentes a la vez —vender de verdad, aguantar
+volumen de contenido, proceso de equipo e internacionalización— con una previsión
+de **más de 24 libros al año y autores externos**.
+
+La objeción, dicha antes de empezar: hoy hay **cero libros publicados**. Construir
+ahora la paginación, el buscador y el flujo de autores externos es levantar
+andamios para un edificio que no se ha empezado, y es como se hunden los proyectos
+que nunca llegan a la primera venta.
+
+La línea que separa lo que sí y lo que no:
+
+| Se hace ahora | Se deja diseñado, sin construir |
+| --- | --- |
+| CI y convenciones escritas | Paginación y buscador del catálogo |
+| Cerrar la venta real | Rutas `/en` |
+| Que el acceso a contenido no asuma «todo en memoria» | Portadas con blur y srcset completo |
+| Imágenes OG bajo demanda en vez de en build | Flujo de revisión para autores externos |
+
+La columna izquierda cuesta poco y evita reescrituras. La derecha se construye
+cuando el número lo pida.
+
+### Los cinco epics, en orden de dependencia
+
+**01 · Guardarraíl — HECHO.** CI en GitHub Actions (`.github/workflows/verificar.yml`)
+que corre tipos, lint, tests y build en cada push y cada pull request, más los
+flujos de navegador contra el proveedor simulado. `CLAUDE.md` y `AGENTS.md` con las
+siete reglas que antes solo vivían en comentarios. `.claude/settings.json` con los
+comandos permitidos y con `.env.local` denegado a la lectura.
+
+**02 · Venta real.** Validar el adaptador de Paddle contra eventos de sandbox —hoy
+está escrito según su documentación y **nunca ha visto un evento real**—, dominio
+verificado en Resend, SMTP de Resend dentro de Supabase para los enlaces mágicos, y
+observabilidad del webhook: uno que falla en silencio es un cliente que pagó y no
+recibió nada.
+
+**03 · Catálogo que aguanta.** Lo barato de hacer ahora: que `src/lib/contenido/`
+deje de asumir que todo cabe en memoria, imágenes OG bajo demanda con caché (en
+build, 100 libros son 100 renders por despliegue) y un presupuesto de tiempo de
+build vigilado por CI. Paginación y buscador quedan diseñados, no construidos.
+
+**04 · Autores externos.** El punto donde el modelo actual se rompe: contenido en
+git editado por una persona. **Recomendación: no meter un CMS.** Los autores entran
+por `/publica-con-alcedo`, y el fundador scaffoldea el MDX aceptado con
+`pnpm nuevo-libro`. El repositorio sigue con un solo escritor, que es lo que
+mantiene el coste en cero y el contenido versionado.
+
+**05 · i18n.** Segmento `[idioma]`, `content/en`, hreflang y canónicas por idioma.
+El último, porque un libro en inglés es un libro distinto y no el mismo con otras
+etiquetas.
+
+### Decisiones de alcance
+
+- Se **mantienen** el diseño aprobado y la capa de pago desacoplada.
+- Se dan por **libres** las URLs y el esquema de Supabase: no hay tráfico ni un solo
+  registro, así que cambiarlos hoy sale gratis y mañana no.
+- Ninguna URL cambia en los epics 01 a 03.
+- Rollback: cada epic es un commit revertible y el 02 va detrás de
+  `PROVEEDOR_PAGO`, así que volver al simulado es cambiar una variable.
+
+### Pendiente
+
+Los epics 02 a 05 necesitan el bundle completo de `/architect-brownfield`
+(20 secciones, `tasks.json`, epics y workspace, con el validador en verde). Se
+genera en una sesión limpia, con este apartado como entrada.
+
 ## FASE 5 — Rediseño con la identidad definitiva · _en curso_
 
 ### De dónde sale

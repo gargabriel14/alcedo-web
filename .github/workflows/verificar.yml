@@ -1,0 +1,102 @@
+# Puerta de calidad del repositorio.
+#
+# Corre en cada push a `main` y en cada pull request. Es lo único que impide que
+# un libro con el frontmatter mal escrito, un tipo roto o un test caído lleguen a
+# producción, porque Vercel despliega sin preguntar.
+#
+# El orden es deliberado y va de lo barato a lo caro: tipos (segundos), lint
+# (segundos), tests de lógica (segundos) y por último el build, que es el que
+# valida el contenido MDX contra los esquemas de Zod y tarda de verdad.
+name: Verificar
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  # Permite lanzarlo a mano desde la pestaña Actions.
+  workflow_dispatch:
+
+# Si llegan dos pushes seguidos, cancela el anterior: no interesa el resultado de
+# un commit que ya está superado.
+concurrency:
+  group: verificar-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verificar:
+    name: Tipos, lint, tests y build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Preparar pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Preparar Node
+        uses: actions/setup-node@v5
+        with:
+          # Una sola fuente para la versión de Node: el campo `engines` de
+          # package.json. Así no hay dos sitios que puedan discrepar.
+          node-version-file: package.json
+          cache: pnpm
+
+      - name: Instalar dependencias
+        run: pnpm install --frozen-lockfile
+
+      - name: Comprobar tipos
+        run: pnpm typecheck
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Tests de lógica
+        run: pnpm test
+
+      # El build es también la validación del contenido: si un fichero de
+      # /content no cumple su esquema de Zod, aquí se cae con el fichero y el
+      # campo exactos.
+      - name: Build
+        run: pnpm build
+
+  extremo-a-extremo:
+    name: Compra y captura de correo
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # Solo si lo básico pasa: no tiene sentido levantar un navegador si los
+    # tipos ya están rotos.
+    needs: verificar
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: package.json
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Instalar el navegador
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Construir
+        run: pnpm build
+
+      # Con el proveedor de pago simulado: recorre la compra entera sin
+      # credenciales y sin mover un euro.
+      - name: Flujos críticos
+        run: pnpm test:e2e
+        env:
+          PROVEEDOR_PAGO: simulado
+
+      - name: Guardar el informe si algo falla
+        if: failure()
+        uses: actions/upload-artifact@v5
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
