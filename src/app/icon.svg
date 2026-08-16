@@ -1,19 +1,18 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-  Favicon: el isotipo en hueso sobre el verde de marca.
-
-  Va sobre fondo pleno y no en contorno porque a 16 px un dibujo en línea se
-  convierte en una mancha gris: la silueta llena es lo único que se distingue en
-  una pestaña.
--->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="96" fill="#235C62" />
-  <g fill="#FAF8F3" transform="translate(58 52) scale(0.77)">
-    <path d="M58 216c64-17 128-13 187 13 21 9 40 21 57 36l-1 41c-32-28-68-48-107-59-45-13-90-15-134-7l-14-4 12-20Z" />
-    <path d="M58 216c59 40 110 90 151 149 16 23 30 47 42 72l-6 20c-25-42-54-80-87-115-34-35-72-66-113-92l13-34Z" />
-    <path d="M456 238c-64-15-129-9-189 19-23 11-44 25-63 42l2 40c34-30 73-53 115-66 43-14 88-17 132-10l14-5-11-20Z" />
-    <path d="M456 238c-61 37-115 84-159 140-18 23-34 47-47 72l5 20c27-41 58-77 93-109 35-33 74-61 116-86l-8-37Z" />
-    <path fill-rule="evenodd" d="M302 120c36-9 71 2 92 28l82 22-82 22c-5 21-21 38-44 46-40 14-83-6-95-44-12-37 11-67 47-74Zm20 32a12 12 0 1 0 0 24 12 12 0 0 0 0-24Z" />
-    <path d="M242 252h20v208l-10 46-10-46V252Z" />
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <title>Alcedo Editorial — avatar azul petróleo</title>
+  <rect width="1024" height="1024" rx="180" fill="#1F5C63"/>
+  <defs>
+    <mask id="cut-avatar" maskUnits="userSpaceOnUse" x="0" y="0" width="500" height="500">
+      <rect width="500" height="500" fill="#fff"/>
+      <circle cx="300" cy="151" r="8" fill="#000"/>
+      <path d="M242 246v120" stroke="#000" stroke-width="12" stroke-linecap="round"/>
+    </mask>
+  </defs>
+  <g transform="translate(62 92) scale(1.8)" fill="#F4F0E6" mask="url(#cut-avatar)">
+    <path d="M240 245C183 195 108 180 35 202c70 38 136 93 205 166Z"/>
+    <path d="M250 245c64-40 132-47 205-25-70 34-139 83-205 148Z"/>
+    <path d="M245 165c27-45 90-50 130-15 17 15 24 34 21 55-42-9-86 3-122 28-27-10-42-39-29-68Z"/>
+    <path d="M357 150 470 175 358 199Z"/>
+    <path d="M226 330 241 438 264 331Z"/>
   </g>
 </svg>

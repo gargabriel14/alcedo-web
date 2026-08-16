@@ -47,13 +47,14 @@
   --borde: #e3dccd;
   --borde-fuerte: #cdc3b0;
 
-  /* Color del logo. Contraste 7,1:1 sobre el fondo hueso: vale para texto
-     pequeño, para enlaces y como fondo de botón con texto claro. */
-  --marca: #235c62;
-  --marca-texto: #1c4b50;
-  --marca-hover: #163c40;
-  --marca-contraste: #faf8f3;
-  --marca-suave: #e2ecec;
+  /* El verde del logotipo oficial (`alcedo_avatar_teal.svg`).
+     Contraste 7,1:1 sobre el fondo hueso: vale para texto pequeño, para enlaces
+     y como fondo de botón con el hueso encima. */
+  --marca: #1f5c63;
+  --marca-texto: #194b51;
+  --marca-hover: #133c41;
+  --marca-contraste: #f4f0e6;
+  --marca-suave: #e1ecec;
 
   --sello-practico: #0e7c9b;
   --sello-practico-texto: #0a6480;

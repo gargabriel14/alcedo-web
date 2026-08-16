@@ -118,6 +118,12 @@ alter table public.eventos enable row level security;
 
 -- Sin políticas para anon: nadie lee nada con la clave pública.
 -- La clave de servicio, que solo vive en el servidor, se salta RLS.
+--
+-- ⚠️ El linter de Supabase avisará de «RLS enabled, no policy» en `suscriptores`,
+-- `eventos` y `eventos_webhook`. **Es correcto y es deliberado**: RLS activo sin
+-- ninguna política significa denegar a todo el mundo, que es justo lo que queremos
+-- para las tablas que solo toca el servidor. No añadas una política para callar el
+-- aviso: sería abrir tres tablas de datos personales para no ver un INFO.
 
 -- Excepción: un cliente identificado por enlace mágico puede ver SUS pedidos.
 drop policy if exists "cada cual ve sus pedidos" on public.pedidos;

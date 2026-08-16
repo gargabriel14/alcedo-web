@@ -150,9 +150,30 @@ function PortadaTipografica({
 
       <div>
         <span aria-hidden="true" className="block h-px w-[18%] bg-tinta/30" />
-        <p className="mt-[4%] text-[3.1cqw] font-semibold tracking-[0.1em] text-tinta/85 uppercase">
-          {libro.autorNombre}
-        </p>
+
+        <div className="mt-[4%] flex items-end justify-between gap-[6%]">
+          <p className="text-[3.1cqw] font-semibold tracking-[0.1em] text-tinta/85 uppercase">
+            {libro.autorNombre}
+          </p>
+
+          {/* Marca de editorial al pie, como en un libro impreso. Va con el color
+              del sello y por máscara, así que no carga una imagen por portada. */}
+          <span
+            aria-hidden="true"
+            className="block size-[9cqw] shrink-0"
+            style={{
+              backgroundColor: colorSello,
+              maskImage: "url(/alcedo_simbolo_negro.svg)",
+              maskSize: "contain",
+              maskRepeat: "no-repeat",
+              maskPosition: "center",
+              WebkitMaskImage: "url(/alcedo_simbolo_negro.svg)",
+              WebkitMaskSize: "contain",
+              WebkitMaskRepeat: "no-repeat",
+              WebkitMaskPosition: "center",
+            }}
+          />
+        </div>
       </div>
     </div>
   );

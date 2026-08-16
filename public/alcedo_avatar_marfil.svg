@@ -1,14 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
-  <title>Alcedo Editorial — avatar azul petróleo</title>
-  <rect width="1024" height="1024" rx="180" fill="#1F5C63"/>
+  <title>Alcedo Editorial — avatar marfil</title>
+  <rect width="1024" height="1024" rx="180" fill="#F4F0E6"/>
   <defs>
-    <mask id="cut-avatar" maskUnits="userSpaceOnUse" x="0" y="0" width="500" height="500">
+    <mask id="cut-avatar-light" maskUnits="userSpaceOnUse" x="0" y="0" width="500" height="500">
       <rect width="500" height="500" fill="#fff"/>
       <circle cx="300" cy="151" r="8" fill="#000"/>
       <path d="M242 246v120" stroke="#000" stroke-width="12" stroke-linecap="round"/>
     </mask>
   </defs>
-  <g transform="translate(62 92) scale(1.8)" fill="#F4F0E6" mask="url(#cut-avatar)">
+  <g transform="translate(62 92) scale(1.8)" fill="#1F5C63" mask="url(#cut-avatar-light)">
     <path d="M240 245C183 195 108 180 35 202c70 38 136 93 205 166Z"/>
     <path d="M250 245c64-40 132-47 205-25-70 34-139 83-205 148Z"/>
     <path d="M245 165c27-45 90-50 130-15 17 15 24 34 21 55-42-9-86 3-122 28-27-10-42-39-29-68Z"/>
