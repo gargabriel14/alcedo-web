@@ -8,8 +8,10 @@ import { UltimasPublicaciones } from "@/components/home/UltimasPublicaciones";
 import { Cinta } from "@/components/ui/Cinta";
 
 export const metadata: Metadata = {
+  // 152 caracteres, frase completa: cabe en lo que Google muestra y no termina
+  // cortada a medias.
   description:
-    "Guías prácticas ilustradas de no-ficción con plantillas listas para usar: Excel e IA para autónomos, hogar y naturaleza. Descarga gratis la plantilla de IVA trimestral.",
+    "Guías prácticas ilustradas con plantillas listas para usar: Excel e IA para autónomos, hogar y naturaleza. Descarga gratis la plantilla del IVA trimestral.",
   alternates: { canonical: "/" },
 };
 

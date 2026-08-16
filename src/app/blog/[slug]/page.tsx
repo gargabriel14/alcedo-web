@@ -14,6 +14,7 @@ import { obtenerLibro } from "@/lib/contenido/libros";
 import { aTarjeta } from "@/lib/contenido/tarjeta";
 import { obtenerRecurso } from "@/lib/datos/recursos";
 import { articuloJsonLd, grafoJsonLd, migasJsonLd } from "@/lib/seo/jsonLd";
+import { componerTitulo, recortarDescripcion } from "@/lib/seo/texto";
 import { formatearFecha, formatearPrecio } from "@/lib/utils";
 
 export function generateStaticParams() {
@@ -35,8 +36,10 @@ export async function generateMetadata({
   const autor = obtenerAutor(articulo.autor);
 
   return {
-    title: articulo.titulo,
-    description: articulo.descripcion,
+    // Los titulares de artículo son largos por naturaleza: si el nombre de la
+    // editorial no cabe, se cae, porque quien busca necesita ver el titular.
+    title: componerTitulo(articulo.tituloSeo ?? articulo.titulo),
+    description: recortarDescripcion(articulo.descripcion),
     alternates: { canonical: `/blog/${articulo.slug}` },
     ...(articulo.borrador ? { robots: { index: false, follow: false } } : {}),
     openGraph: {

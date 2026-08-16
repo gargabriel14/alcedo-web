@@ -9,6 +9,7 @@ import { librosDelSello } from "@/lib/contenido/libros";
 import { aTarjeta } from "@/lib/contenido/tarjeta";
 import { LISTA_SELLOS, SELLOS, type ClaveSello } from "@/lib/sellos";
 import { grafoJsonLd, migasJsonLd } from "@/lib/seo/jsonLd";
+import { componerTitulo, recortarDescripcion } from "@/lib/seo/texto";
 import { formatearFecha } from "@/lib/utils";
 
 export function generateStaticParams() {
@@ -30,8 +31,10 @@ export async function generateMetadata({
   const datos = SELLOS[sello];
 
   return {
-    title: `${datos.nombre} — ${datos.lema}`,
-    description: datos.descripcion.slice(0, 175),
+    // Solo el nombre del sello: con el lema detrás se iba a 80 caracteres y
+    // Google cortaba justo por el lema.
+    title: componerTitulo(datos.nombre),
+    description: recortarDescripcion(`${datos.lema}. ${datos.descripcion}`),
     alternates: { canonical: `/sellos/${datos.slug}` },
     openGraph: {
       title: `${datos.nombre} · Editorial Alcedo`,

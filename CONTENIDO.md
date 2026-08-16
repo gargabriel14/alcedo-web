@@ -215,6 +215,7 @@ cuadrado de 800 px como mínimo y actualiza `src`.
 ```mdx
 ---
 titulo: Cómo calcular las casillas del modelo 303 en una hoja de cálculo
+tituloSeo: Calcular las casillas del modelo 303 en Excel   # opcional, ver abajo
 descripcion: >-
   Entre 80 y 180 caracteres. Es el texto que sale en Google, así que tiene que dar
   ganas de entrar y decir la verdad de lo que hay dentro.
@@ -249,6 +250,22 @@ puesto en `recursoRelacionado`. Si no has puesto ninguno, no se pinta nada.
 - tablas y citas con `>`
 - enlaces normales de Markdown
 ```
+
+### `tituloSeo`: cuándo hace falta
+
+Google corta el título alrededor de los **60 caracteres**. Si el titular de tu
+artículo o de tu libro pasa de ahí, añade `tituloSeo` con una versión corta: el
+titular grande de la página sigue siendo `titulo`, y el corto es el que se ve en
+la pestaña y en el resultado de búsqueda.
+
+No escribas peor para caber. Para eso está el campo.
+
+```yaml
+titulo: Cómo calcular las casillas del modelo 303 en una hoja de cálculo  # 64
+tituloSeo: Calcular las casillas del modelo 303 en Excel                  # 47
+```
+
+Si te pasas de 60 en `tituloSeo`, el build te avisa.
 
 ### Consejos de estilo Alcedo
 

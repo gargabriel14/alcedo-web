@@ -54,6 +54,11 @@ const imagen = z.object({
 
 export const esquemaLibro = z.object({
   titulo: z.string().min(3),
+  /** Título corto para Google, si el del libro pasa de 60 caracteres. */
+  tituloSeo: z
+    .string()
+    .max(60, "Con más de 60 caracteres, Google lo corta: eso es lo que evita este campo")
+    .optional(),
   subtitulo: z.string().min(10, "El subtítulo es media venta: concreta el resultado"),
   sello: z.enum(CLAVES_SELLO),
   /** Slug del autor en `/content/autores`. */
@@ -204,6 +209,15 @@ export type Fichero = z.infer<typeof esquemaFichero>;
 
 export const esquemaArticulo = z.object({
   titulo: z.string().min(10),
+  /**
+   * Título corto para la pestaña y para Google, cuando el titular del artículo
+   * pasa de 60 caracteres y se cortaría en el resultado de búsqueda. El titular
+   * de la página sigue siendo `titulo`: nadie tiene que escribir peor por caber.
+   */
+  tituloSeo: z
+    .string()
+    .max(60, "Con más de 60 caracteres, Google lo corta: eso es lo que evita este campo")
+    .optional(),
   /** Meta description. Entre 110 y 160 caracteres es la horquilla útil. */
   descripcion: z.string().min(80).max(180),
   fecha: fechaIso,

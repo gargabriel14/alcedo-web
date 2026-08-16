@@ -11,6 +11,7 @@ import { articulosPublicados } from "@/lib/contenido/blog";
 import { librosDelAutor } from "@/lib/contenido/libros";
 import { aTarjeta } from "@/lib/contenido/tarjeta";
 import { grafoJsonLd, migasJsonLd, personaJsonLd } from "@/lib/seo/jsonLd";
+import { componerTitulo, recortarDescripcion } from "@/lib/seo/texto";
 import { formatearFecha } from "@/lib/utils";
 
 export function generateStaticParams() {
@@ -28,8 +29,10 @@ export async function generateMetadata({
   if (!autor) return { title: "Autor no encontrado" };
 
   return {
-    title: `${autor.nombre} — ${autor.rol}`,
-    description: autor.bioCorta,
+    // Solo el nombre: con el rol detrás salía «G. G. Alcedo — Autor y fundador
+    // de Editorial Alcedo · Editorial Alcedo», 70 caracteres y la marca dos veces.
+    title: componerTitulo(autor.nombre),
+    description: recortarDescripcion(`${autor.rol}. ${autor.bioMedia}`),
     alternates: { canonical: `/autor/${autor.slug}` },
     openGraph: {
       type: "profile",

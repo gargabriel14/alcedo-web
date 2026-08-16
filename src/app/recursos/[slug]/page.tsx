@@ -11,6 +11,7 @@ import { obtenerLibro } from "@/lib/contenido/libros";
 import { aTarjeta } from "@/lib/contenido/tarjeta";
 import { obtenerRecurso, RECURSOS } from "@/lib/datos/recursos";
 import { grafoJsonLd, migasJsonLd } from "@/lib/seo/jsonLd";
+import { componerTitulo, recortarDescripcion } from "@/lib/seo/texto";
 
 export function generateStaticParams() {
   return RECURSOS.map((recurso) => ({ slug: recurso.slug }));
@@ -27,8 +28,9 @@ export async function generateMetadata({
   if (!recurso) return { title: "Recurso no encontrado" };
 
   return {
-    title: `${recurso.titulo} — descarga gratis`,
-    description: recurso.gancho.slice(0, 175),
+    // «gratis» delante: es la palabra que decide el clic en una descarga.
+    title: componerTitulo(`${recurso.titulo}, gratis`),
+    description: recortarDescripcion(recurso.gancho),
     alternates: { canonical: `/recursos/${recurso.slug}` },
     openGraph: {
       title: `${recurso.titulo} · gratis`,

@@ -20,6 +20,7 @@ import { obtenerAutor } from "@/lib/contenido/autores";
 import { librosRelacionados, obtenerLibro, todosLosLibros } from "@/lib/contenido/libros";
 import { aTarjeta, etiquetaEstado } from "@/lib/contenido/tarjeta";
 import { obtenerSello } from "@/lib/sellos";
+import { componerTitulo, recortarDescripcion } from "@/lib/seo/texto";
 import {
   faqJsonLd,
   grafoJsonLd,
@@ -43,14 +44,19 @@ export async function generateMetadata({
 
   if (!libro) return { title: "Libro no encontrado" };
 
+  // El título es solo el del libro: el subtítulo no cabía en los 60 caracteres
+  // que muestra Google y se perdía entero. Vive en la descripción, que sí se lee.
+  const descripcion = recortarDescripcion(`${libro.subtitulo}. ${libro.gancho}`);
+
   return {
-    title: `${libro.titulo} — ${libro.subtitulo}`,
-    description: libro.gancho.slice(0, 175),
+    title: componerTitulo(libro.tituloSeo ?? libro.titulo),
+    description: descripcion,
     alternates: { canonical: `/libro/${libro.slug}` },
     openGraph: {
       type: "article",
+      // En redes sí cabe más, y el autor es lo que da confianza al compartir.
       title: `${libro.titulo} · ${libro.autorNombre}`,
-      description: libro.gancho.slice(0, 175),
+      description: descripcion,
       url: `/libro/${libro.slug}`,
     },
   };

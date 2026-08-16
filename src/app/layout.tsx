@@ -61,7 +61,8 @@ const AvisoCookies = dynamic(() =>
 export const metadata: Metadata = {
   metadataBase: new URL(SITIO.url),
   title: {
-    default: `${SITIO.nombre} — Guías prácticas con plantillas que se usan`,
+    // 49 caracteres: cabe entero en los ~60 que muestra Google.
+    default: `${SITIO.nombre} — Guías prácticas con plantillas`,
     template: `%s · ${SITIO.nombre}`,
   },
   description: SITIO.descripcion,

@@ -85,7 +85,13 @@ export function PortadaLibro({
             {libro.portada ? (
               <Image
                 src={libro.portada.src}
-                alt=""
+                /*
+                 * El `alt` va aquí, en la imagen, y no solo en el `aria-label`
+                 * del bloque: Google Images lee el `alt` y una portada de libro
+                 * es una de las pocas imágenes que traen tráfico por sí solas.
+                 * Vacío únicamente cuando el título ya está escrito al lado.
+                 */
+                alt={decorativa ? "" : descripcion}
                 fill
                 sizes={sizes}
                 priority={prioridad}

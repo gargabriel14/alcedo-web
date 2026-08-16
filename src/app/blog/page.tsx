@@ -10,7 +10,7 @@ import { formatearFecha } from "@/lib/utils";
 export const metadata: Metadata = {
   title: "Blog",
   description:
-    "Artículos prácticos de Editorial Alcedo: Excel e IA para autónomos, impuestos, hogar y plantas. Cada uno resuelve una duda concreta y termina en algo que puedes usar.",
+    "Artículos prácticos: Excel e IA para autónomos, impuestos, hogar y plantas. Cada uno resuelve una duda concreta y termina en algo que puedes usar.",
   alternates: { canonical: "/blog" },
   openGraph: {
     title: "Blog de Editorial Alcedo",

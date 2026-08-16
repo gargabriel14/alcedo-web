@@ -1,8 +1,16 @@
 import type { Articulo } from "@/lib/contenido/blog";
 import type { Autor } from "@/lib/contenido/autores";
 import type { Libro } from "@/lib/contenido/libros";
+import { DIAS_GARANTIA } from "@/lib/garantia";
 import { obtenerSello } from "@/lib/sellos";
 import { SITIO, urlAbsoluta } from "@/lib/sitio";
+
+/** Fecha en ISO a un año vista, para la validez del precio. */
+function dentroDeUnAno(): string {
+  const fecha = new Date();
+  fecha.setUTCFullYear(fecha.getUTCFullYear() + 1);
+  return fecha.toISOString().slice(0, 10);
+}
 
 /**
  * Datos estructurados JSON-LD.
@@ -44,14 +52,16 @@ export function sitioWebJsonLd(): ObjetoJsonLd {
     description: SITIO.descripcion,
     inLanguage: "es-ES",
     publisher: { "@id": ID_ORGANIZACION },
-    potentialAction: {
-      "@type": "SearchAction",
-      target: {
-        "@type": "EntryPoint",
-        urlTemplate: urlAbsoluta("/catalogo?buscar={search_term_string}"),
-      },
-      "query-input": "required name=search_term_string",
-    },
+    /*
+     * Sin `SearchAction` a propósito.
+     *
+     * Declaraba una caja de búsqueda apuntando a `/catalogo?buscar={q}`, pero el
+     * catálogo filtra en el navegador y no lee ese parámetro: era una promesa que
+     * el sitio no cumplía. Google prueba esas URL, y anunciar un buscador que no
+     * busca es peor que no anunciar ninguno.
+     *
+     * Vuelve el día que exista una búsqueda de verdad en el catálogo.
+     */
   };
 }
 
@@ -123,12 +133,34 @@ export function productoLibroJsonLd(libro: Libro): ObjetoJsonLd {
           : "https://schema.org/PreOrder",
       itemCondition: "https://schema.org/NewCondition",
       seller: { "@id": ID_ORGANIZACION },
+      /*
+       * Un precio sin fecha de validez hace que Google avise en Search Console.
+       * Un año vista: los precios de Alcedo no cambian por temporada, y si
+       * cambian, el despliegue regenera esta fecha.
+       */
+      priceValidUntil: dentroDeUnAno(),
       // El impuesto lo gestiona la pasarela como vendedor: el precio es final.
       priceSpecification: {
         "@type": "PriceSpecification",
         price: libro.precios.pdf.toFixed(2),
         priceCurrency: "EUR",
         valueAddedTaxIncluded: true,
+      },
+      /*
+       * La garantía de devolución, declarada.
+       *
+       * Google la muestra en los resultados de compra, y en un producto digital
+       * de 29 € comprado a una editorial desconocida es exactamente la objeción
+       * que frena el clic. Los días salen de `garantia.ts`, que es el mismo
+       * módulo que decide si una devolución sigue en plazo: el dato estructurado
+       * no puede prometer algo que el sistema no cumpla.
+       */
+      hasMerchantReturnPolicy: {
+        "@type": "MerchantReturnPolicy",
+        applicableCountry: "ES",
+        returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+        merchantReturnDays: DIAS_GARANTIA,
+        returnFees: "https://schema.org/FreeReturn",
       },
     },
   };

@@ -9,7 +9,7 @@ import { grafoJsonLd, migasJsonLd } from "@/lib/seo/jsonLd";
 export const metadata: Metadata = {
   title: "Recursos gratis",
   description:
-    "Plantillas y guías descargables de Editorial Alcedo: IVA trimestral para autónomos, calculadora de precio por hora y mapa de luz para plantas. Gratis, a cambio de tu correo.",
+    "Plantillas descargables gratis: IVA trimestral para autónomos, calculadora de precio por hora y mapa de luz para plantas. A cambio solo de tu correo.",
   alternates: { canonical: "/recursos" },
   openGraph: {
     title: "Recursos gratuitos de Editorial Alcedo",
