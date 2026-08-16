@@ -36,6 +36,8 @@ export function CapturaEmail({
   const [estado, accion, pendiente] = useActionState(altaEnBoletin, ESTADO_ALTA_INICIAL);
   const idCampo = useId();
   const idAyuda = `${idCampo}-ayuda`;
+  const idError = `${idCampo}-error`;
+  const hayError = estado.estado === "error";
 
   if (estado.estado === "ok") {
     return (
@@ -126,8 +128,14 @@ export function CapturaEmail({
             autoComplete="email"
             inputMode="email"
             placeholder="tu@correo.com"
-            aria-describedby={idAyuda}
-            aria-invalid={estado.estado === "error" ? true : undefined}
+            /*
+             * Con error, el mensaje entra en `aria-describedby` **delante** de la
+             * ayuda: un lector de pantalla que vuelve al campo tiene que oír qué
+             * ha fallado, no la letra pequeña. Sin esa asociación, el aviso queda
+             * en pantalla pero huérfano del campo que lo provocó (WCAG 3.3.1).
+             */
+            aria-describedby={hayError ? `${idError} ${idAyuda}` : idAyuda}
+            aria-invalid={hayError ? true : undefined}
             className="h-11 w-full rounded-md border border-borde-fuerte bg-fondo px-3.5 text-[0.9375rem] text-texto placeholder:text-texto-tenue/70"
           />
         </div>
@@ -137,8 +145,11 @@ export function CapturaEmail({
       </div>
 
       <p aria-live="polite" className="min-h-0">
-        {estado.estado === "error" ? (
-          <span className="mt-2 block text-sm font-medium text-sello-labs-texto">
+        {hayError ? (
+          <span
+            id={idError}
+            className="mt-2 block text-sm font-medium text-sello-labs-texto"
+          >
             {estado.mensaje}
           </span>
         ) : null}

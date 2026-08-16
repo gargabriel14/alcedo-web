@@ -39,9 +39,11 @@ const COMPROMISOS = [
 
 export function CompromisoAlcedo() {
   return (
+    // `sobre-oscuro` redefine los tokens de la banda: texto, bordes, marca y
+    // anillo de foco pasan a sus valores para fondo oscuro sin repintar nada.
     <section
       aria-labelledby="titulo-compromiso"
-      className="bg-tinta py-20 text-hueso sm:py-28"
+      className="sobre-oscuro bg-fondo py-20 text-texto sm:py-28"
     >
       <Contenedor>
         <TituloSeccion
@@ -53,23 +55,22 @@ export function CompromisoAlcedo() {
             </>
           }
           entrada="Somos una editorial pequeña. Nuestra única ventaja es que respondemos de lo que publicamos."
-          oscuro
         />
 
         <ol className="mt-14 grid gap-x-12 gap-y-10 sm:grid-cols-2">
           {COMPROMISOS.map((compromiso, indice) => (
             <li key={compromiso.titulo}>
-              <Revelar retraso={indice * 70} className="border-t border-hueso/20 pt-6">
+              <Revelar retraso={indice * 70} className="border-t border-borde-fuerte pt-6">
                 <p
                   aria-hidden="true"
                   className="text-[0.65rem] font-semibold tracking-[0.24em] text-marca uppercase"
                 >
                   {String(indice + 1).padStart(2, "0")}
                 </p>
-                <h3 className="mt-3 font-titulares text-xl leading-snug text-hueso">
+                <h3 className="mt-3 font-titulares text-xl leading-snug text-texto">
                   {compromiso.titulo}
                 </h3>
-                <p className="mt-2.5 text-[0.9375rem] leading-relaxed text-hueso/60">
+                <p className="mt-2.5 text-[0.9375rem] leading-relaxed text-texto-tenue">
                   {compromiso.texto}
                 </p>
               </Revelar>
@@ -77,9 +78,9 @@ export function CompromisoAlcedo() {
           ))}
         </ol>
 
-        <p className="mt-14 text-sm text-hueso/50">
+        <p className="mt-14 text-sm text-texto-tenue">
           Las condiciones completas, en{" "}
-          <Link href="/legal/terminos" className="underline hover:text-marca">
+          <Link href="/legal/terminos" className="underline hover:text-marca-texto">
             términos de compra
           </Link>
           . Los precios de la web se muestran con impuestos incluidos.

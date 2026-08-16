@@ -21,7 +21,8 @@ export function MenuMovil() {
     <Dialog.Root>
       <Dialog.Trigger
         aria-label="Abrir el menú de navegación"
-        className="inline-flex size-10 items-center justify-center rounded-md text-texto transition-colors hover:bg-superficie-tenue md:hidden"
+        // 44 px: es el control más pulsado del móvil y no puede quedarse corto.
+        className="inline-flex size-11 items-center justify-center rounded-md text-texto transition-colors hover:bg-superficie-tenue md:hidden"
       >
         <svg
           aria-hidden="true"

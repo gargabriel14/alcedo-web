@@ -16,18 +16,26 @@ interface PropsTituloSeccion {
   /** Enlace a la derecha en escritorio, debajo en móvil. */
   enlace?: { texto: string; ruta: string };
   id?: string;
-  /** Sobre fondo oscuro. */
-  oscuro?: boolean;
   className?: string;
 }
 
+/**
+ * Cabecera de sección.
+ *
+ * **No tiene variante para fondo oscuro, y es a propósito.** La tenía, y pintaba
+ * los colores a mano (`text-hueso/60`, `text-marca`), lo que dejaba el verde de
+ * marca en 2,3:1 sobre tinta —por debajo del 4,5:1 que exige WCAG— y el anillo de
+ * foco invisible. Ahora es la banda la que declara `sobre-oscuro` y redefine sus
+ * tokens; este componente usa los de siempre y sale correcto en los dos fondos.
+ *
+ * La regla general: el color lo decide el contenedor, no cada componente.
+ */
 export function TituloSeccion({
   ojo,
   titulo,
   entrada,
   enlace,
   id,
-  oscuro = false,
   className,
 }: PropsTituloSeccion) {
   return (
@@ -38,27 +46,17 @@ export function TituloSeccion({
       )}
     >
       <Revelar className="max-w-2xl">
-        {ojo ? (
-          <p className={cn("ojo-titular mb-4", oscuro && "text-hueso/55")}>{ojo}</p>
-        ) : null}
+        {ojo ? <p className="ojo-titular mb-4">{ojo}</p> : null}
 
         <h2
           id={id}
-          className={cn(
-            "text-[clamp(1.9rem,3.6vw,3rem)] leading-[1.12] [&_em]:text-marca-texto [&_em]:italic",
-            oscuro && "text-hueso [&_em]:text-marca",
-          )}
+          className="text-[clamp(1.9rem,3.6vw,3rem)] leading-[1.12] [&_em]:text-marca-texto [&_em]:italic"
         >
           {titulo}
         </h2>
 
         {entrada ? (
-          <p
-            className={cn(
-              "mt-4 max-w-[56ch] text-base leading-relaxed text-texto-tenue sm:text-lg",
-              oscuro && "text-hueso/60",
-            )}
-          >
+          <p className="mt-4 max-w-[56ch] text-base leading-relaxed text-texto-tenue sm:text-lg">
             {entrada}
           </p>
         ) : null}
@@ -67,10 +65,7 @@ export function TituloSeccion({
       {enlace ? (
         <Link
           href={enlace.ruta}
-          className={cn(
-            "group inline-flex shrink-0 items-center gap-2 pb-1 text-[0.65rem] font-semibold tracking-[0.18em] uppercase",
-            oscuro ? "text-hueso hover:text-marca" : "text-marca-texto",
-          )}
+          className="group inline-flex shrink-0 items-center gap-2 pb-1 text-[0.65rem] font-semibold tracking-[0.18em] text-marca-texto uppercase"
         >
           {enlace.texto}
           <span

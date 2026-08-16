@@ -109,6 +109,49 @@
   --sombra-tarjeta: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px -12px rgb(0 0 0 / 0.6);
 }
 
+/**
+ * Bandas oscuras dentro de una página clara.
+ *
+ * Una sección de fondo tinta en medio de un documento en tema claro seguía
+ * usando los tokens del tema claro, y eso rompía dos cosas medibles:
+ *
+ * - **El anillo de foco daba 2,30:1** contra el fondo oscuro, por debajo del 3:1
+ *   que exige WCAG 1.4.11. Quien navega con el teclado perdía de vista dónde
+ *   estaba justo en la sección del Compromiso.
+ * - **El verde de marca daba 2,30:1** sobre tinta, por debajo del 4,5:1 de texto.
+ *
+ * Ningún test automático lo detecta: Lighthouse comprueba el contraste del texto
+ * contra el fondo declarado, no el del anillo de foco contra la banda local.
+ *
+ * En vez de repintar cada elemento a mano con `text-hueso/60`, la banda redefine
+ * los tokens y todo lo de dentro —texto, bordes, marca y foco— se resuelve solo.
+ */
+.sobre-oscuro {
+  color-scheme: dark;
+
+  --fondo: #1a1a1a;
+  --fondo-alterno: #211f1c;
+  --superficie: #262320;
+  --superficie-tenue: #2b2825;
+
+  --texto: #f4f0e6;
+  /* 5,9:1 sobre tinta. */
+  --texto-tenue: #9b968c;
+  --texto-inverso: #1a1a1a;
+
+  --borde: #35322d;
+  --borde-fuerte: #4d4941;
+
+  /* 7,3:1 sobre tinta, tanto para texto como para el anillo de foco. */
+  --marca: #6db3b8;
+  --marca-texto: #8ac6ca;
+  --marca-hover: #a3d4d7;
+  --marca-contraste: #10201f;
+  --marca-suave: #1c3a39;
+
+  --foco: #8ac6ca;
+}
+
 /* Puente entre los tokens y las utilidades de Tailwind:
    `bg-fondo`, `text-texto-tenue`, `border-borde`, `bg-sello-vida`… */
 @theme inline {

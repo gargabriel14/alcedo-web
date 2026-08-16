@@ -58,7 +58,9 @@ export function ConmutadorTema({ className }: { className?: string }) {
       title="Cambiar entre modo claro y oscuro"
       aria-label="Cambiar entre modo claro y oscuro"
       className={cn(
-        "inline-flex size-10 items-center justify-center rounded-md text-texto-tenue transition-colors hover:bg-superficie-tenue hover:text-texto",
+        // 44 px: el objetivo táctil recomendado. Aquí tres de cada cuatro
+        // visitas llegan con el pulgar, y 40 px se falla más de lo que parece.
+        "inline-flex size-11 items-center justify-center rounded-md text-texto-tenue transition-colors hover:bg-superficie-tenue hover:text-texto",
         className,
       )}
     >
